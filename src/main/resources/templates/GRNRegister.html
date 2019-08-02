@@ -1,0 +1,129 @@
+<span th:replace="~{shared/Menubar :: header}"></span>
+
+<main class="container mt-5">
+
+
+
+<div class="card border-primary box">
+
+	<div class="card-header headerbox" style="background: #50d8af !important">
+		<h2 class="text-center">Welcome to GRN Register page!!</h2>
+	</div>
+	<div class="card-body text-center">
+				
+			<form th:action="@{insert}" method="post" th:object="${goodRecieveNote}" class="form form-horizontal">
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="grnCode" class="control-label">GRN Code</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<input type="text" th:field="*{grnCode}" class="form-control" required="true" placeholder="Enter GRN Code"/>
+								<div class="text-left">
+									<span th:errors="*{grnCode}" class="text-danger" ></span>
+									<span id="msg" class="text-danger"></span>	
+								</div>
+							</div>
+						</div>
+						
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="grnType" class="control-label">GRN Type</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<input type="text" th:field="*{grnType}" class="form-control " required="true" placeholder="Enter GRN Type"/>
+								
+							<div class="text-left"><span th:errors="*{grnType}" class="text-danger" ></span> </div>
+							</div>
+						</div>
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="purchase.purId" class="control-label">Place Order Code</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<select th:field="*{purchase.purId}" class="form-control" required="true">
+									<option value="">-Select-</option>
+									<options items="${purchase}" />
+								</select>
+							<div class="text-left"><span th:errors="*{purchase.purId}" class="text-danger" ></span></div>
+							</div>
+						</div>
+
+						
+
+						
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="grnDesc" class="control-label">DESCRIPTION</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<textarea th:field="*{grnDesc}" class="form-control" required="true" placeholder="Enter Any Note"></textarea>
+							<div class="text-left"><span th:errors="*{grnDesc}" class="text-danger" ></span>	</div>
+							</div>
+						</div>
+						<br>
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+							
+							</div>
+							<div class="col-md-6 col-xs-12 text-left">
+									<button type="submit" class="btn btn-success align-left btnbox" >Register &nbsp;<i class="fa fa-send"></i></button>
+							</div>
+							
+						</div>
+	
+				</form>
+			
+	</div>
+	<div th:text="${msg != null}" class="card-footer text-danger bg-success">
+		<span th:text="${msg}"></span> 
+			<a th:if="${grnId != null }" th:href="@{view/{id}(id=${grnId})"  class="btn btn-primary float-right" >View &nbsp;<i class="fa fa-eye"></i></a>
+	</div>
+</div> <!-- card ended -->
+
+<br><br>
+
+</main>
+
+<span th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</span>
+
+
+<script>
+
+	if ($(window).width() < 768) {
+		$('.card-body').removeClass('text-center');
+		$('.card').removeClass('box');
+		$('.card-header').removeClass('headerbox');
+	} else {
+		$('.card-body').addClass('text-center');
+	}
+
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#grnCode").change(function(){
+		$.ajax({
+			url:'check',
+			data:{'code':$("#grnCode").val()},
+			success:function(resp){
+				console.log('my message' + resp);
+				$("#msg").text(resp);
+				if(resp!='')
+					{
+						$("#grnCode").val("");
+						$("#grnCode").focus();
+					}
+			},
+			error: function(resp, err){ console.log('my message' + err.responseText); }
+		});
+		//console.log("resp"+resp)
+	});
+});
+</script>
+

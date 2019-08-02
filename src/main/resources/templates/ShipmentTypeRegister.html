@@ -1,0 +1,183 @@
+<span th:replace="~{shared/Menubar :: header}"></span>
+
+<main class="container mt-3">
+
+<div th:if="${msg}" class=" flex-row-reverse ">
+	    <div class="alert alert-success p-2" role="alert">
+	        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <strong  th:text="${msg}"></strong> 
+	    </div>
+ </div>
+<div th:if="${emsg}" class=" flex-row-reverse">
+	    <div class="alert alert-danger p-2" role="alert">
+	        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <strong  th:text="${emsg}" ></strong> 
+	    </div>
+</div>
+
+
+
+
+<div class="card border-primary box">
+
+	<div class="card-header headerbox" style="background: #50d8af !important">
+		<h2 class="text-center">Welcome to Shipment Register Page</h2>
+	</div>
+	<div class="card-body text-center">
+				
+			<form th:action="@{save}" method="POST" th:object="${shipmentType}" class="form form-horizontal">
+						
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="shipmentMode" class="control-label">Shipment Mode</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<select th:field="*{shipmentMode}" class="form-control" required="true">
+										<option value="">-Select Shipment Mode-</option>
+										<option value="AIR">Air</option>
+										<option value="TRUCK">Truck</option>
+										<option value="SHIP">Ship</option>
+										<option value="TRAIN">Train</option>
+								</select>
+							<div class="text-left"><span th:errors="*{shipmentMode}" class="text-danger" ></span></div>
+							</div>
+						</div>
+						
+				
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="shipmentCode" class="control-label">Shipment Code</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<input th:field="*{shipmentCode}" class="form-control" required="true" placeholder="Enter Shipment Code"/>
+								<div class="text-left">
+									<span th:errors="*{shipmentCode}" class="text-danger" ></span>
+									<span id="msg" class="text-danger"></span>
+								</div>
+							</div>
+						</div>
+						
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="enableShipment" class="control-label">Enable Shipment</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<select th:field="*{enableShipment}" class="form-control" required="true">
+										<option value="">-Select-</option>
+										<option value="YES">Yes</option>
+										<option value="NO">No</option>
+								</select>
+							<div class="text-left"><span th:errors="*{enableShipment}" class="text-danger" ></span>	</div>
+							</div>
+						</div>
+						
+						
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12">
+								<label for="shipmentGrade" class="control-label">Shipment Grade</label>
+							</div>
+							<div class="col-md-6 col-xs-12 text-left">
+								<div class="form-check-inline">
+									<label class="form-check-label" for="shipmentGrade1"> 
+										 <input type="radio"  th:field="*{shipmentGrade}"  class="form-check-input" value="A" />A
+									</label>
+								</div>
+								<div class="form-check-inline">
+									<label class="form-check-label" for="shipmentGrade2">
+										 <input type="radio"  th:field="*{shipmentGrade}"  class="form-check-input" value="B" />B
+									</label>
+								</div>
+								<div class="form-check-inline">
+									<label class="form-check-label" for="shipmentGrade3">
+										 <input type="radio" th:field="*{shipmentGrade}"  class="form-check-input" value="C" />C
+									</label>
+								</div>
+								<div class="text-left">
+									<span th:errors="*{shipmentGrade}" class="text-danger" ></span>
+								</div>
+							</div>
+						</div>
+						
+						
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="note" class="control-label">DESCRIPTION</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<textarea th:field="*{note}" class="form-control" required="true" placeholder="Enter Any Note"></textarea>
+							<div class="text-left"><span th:errors="*{note}" class="text-danger" ></span>	</div>
+							</div>
+						</div>
+						
+						<br>
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+							
+							</div>
+							<div class="col-md-6 col-xs-12 text-left">
+								<input type="submit" value="Register" class="btn btn-rounded btn-block btn-success btnbox" />
+							</div>
+							
+						</div>
+	
+				</form>
+			
+	</div>
+	
+	<div th:if="${msg ne null }"  class="card-footer text-white bg-danger">
+		 <span  th:text="${msg}"></span>
+	</div>
+
+	<div th:if="${shipmentId ne null }"   class="card-footer text-white bg-success">
+		 <span  th:text="${msg}"></span>
+		<a th:href="@{view?{id}(id=${shipmentId})}"  class="btn btn-primary float-right" >View &nbsp;<i class="fa fa-eye"></i></a>
+	</div>
+	
+</div> <!-- card ended -->
+
+<br><br>
+
+</main>
+
+
+<th:block th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</th:block>
+
+<script>
+
+	if ($(window).width() < 768) {
+		$('.card-body').removeClass('text-center');
+		$('.card').removeClass('box');
+		$('.card-header').removeClass('headerbox');
+	} else {
+		$('.card-body').addClass('text-center');
+	}
+
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#shipmentCode").change(function(){
+		$.ajax({
+			url:'check',
+			data:{'shipmentCode':$("#shipmentCode").val()},
+			success:function(resp){
+				console.log('my message' + resp);
+				$("#msg").text(resp);
+				if(resp!='')
+					{
+						$("#shipmentCode").val("");
+						$("#shipmentCode").focus();
+					}
+			},
+			error: function(resp, err){ console.log('my message' + err.responseText); }
+		});
+		//console.log("resp"+resp)
+	});
+});
+</script>

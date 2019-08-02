@@ -1,0 +1,39 @@
+## database connection
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/warehouseboot
+    username: root
+    password: root
+ ## connection pooling   
+    hikari:
+      maximum-pool-size: 12       ### max connections
+      connection-timeout: 20000   ### if no connection allocated 
+      max-lifetime: 1200000       ### life time of sql 
+      minimum-idle: 5             ### idle connections
+      idle-timeout: 30000         ### if no activity then idle
+      auto-commit: true## jpa properties
+  jpa:    hibernate:      ddl-auto: update
+    properties:      hibernate:
+        show_sql: true
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL5Dialect
+## mail properties  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: srvjava93@gmail.com
+    password: project@1993
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true  servlet:    multipart:      max-file-size: 10MB
+## logging
+logging:
+  file: warehouse.log
+  level:
+    root: INFO
+    com.app: DEBUG
+## file size
+        

@@ -1,0 +1,119 @@
+<span th:replace="~{shared/Menubar :: header}"></span>
+
+<main class="container mt-5">
+
+
+
+<div class="card border-primary box">
+
+	<div class="card-header headerbox" style="background: #50d8af !important">
+		<h2 class="text-center">
+			<span >Welcome to Sale Order Data Page!!</span>
+		</h2>
+	</div>
+	
+	
+	<div class="card-body">
+	
+			 <table class="table  table-bordered table-hover text-center  ">
+					<tr >
+						<th class="col-6">Order Code </th>
+						<td class="col-6" th:text="${saleOrderCode}"></td>
+					</tr>
+					<tr>
+						<th class="col-6">Order Status</th>
+						<td class="col-6 bg-info" th:text="${orderStatus}"></td>
+					</tr>
+			</table> 
+	
+		<th:block th:if="${orderStatus =='OPEN' || orderStatus=='PICKING' }">
+			
+			<form th:action="@{addItem}" method="post" th:object="${salesDetails}" >
+				
+				
+				<div class="row">
+					<div class="col-2"><label for="item.itemId" class="control-label"> Choose Item</label></div>
+					<div class="col-3">
+						<select th:field=*{item.itemId}" class="form-control"  required="true">
+									<option value="">--SELECT--</option>
+									<options items="${item}" />
+						</select>
+					</div>
+					
+					<div class="col-2"><label for="quantity" class="control-label">Quantity</label></div>
+					<div class="col-3"><input th:field=*{quantity}" class="form-control" required="true" placeholder="Enter Quantity"/></div>
+					<div class="col-2"><input type="submit" value="ADD ITEM" class="btn btn-success"></div>
+				
+				<input type="text" th:field=*{soHoId}" hidden />
+				</div>
+				
+									
+			</form>	
+		</th:block>
+			
+			<br><br>	
+		
+			<!-- It will display all child items in Purchase if exist -->
+		<div th:if="${salesDetailsList != null}" class="card-footer table-responsive">
+				<table class="table table table-hover table-bordered">
+					<tr>
+						<th>SL NO</th>
+						<th>ITEM CODE</th>
+						<th>BASE COST</th>
+						<th>QTY</th>
+						<th>LINE TOTAL</th>
+						<th th:if="${orderStatus == 'OPEN' || orderStatus == 'READY'}">OPERATIONS</th>
+					</tr>
+						<tr th:if="sdl:${salesDetailsList}">
+							<td th:text="${sdl.slno}"></td>
+							<td th:text="${sdl.item.itemCode}"></td>
+							<td th:text="${sdl.item.baseCost}"></td>
+							<td th:text="${sdl.quantity}"></td>
+							<td th:text="${sdl.item.baseCost*sdl.quantity}"></td>
+							<td th:if="${orderStatus=='READY'}">
+							<a th:href="@{removeItem?salesDtlsId=${sdl.salesDtlsId}&saleOrderId=${sdl.soHoId}}"
+									class="btn btn-danger btnbox">DELETE</a></td>
+						</tr>
+						<tr th:if="${orderStatus=='READY'}">
+							<td colspan="6" align="center">
+							<a th:href="@{updateOrderStatus?saleOrderId=${saleOrderId}&orderStatus=CONFIRM}"
+								class="btn btn-success btnbox">CONFIRM OREDER</a></td>
+						</tr>
+				</table>
+
+				</div>
+ 	
+ 			<a th:if="${param.status == 'ORDERED'}" th:href="@{all}" class="btn btn-success btn-block btnbox">View All</a>
+				
+	</div>
+</div>
+			
+</main>
+
+<span th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</span>
+
+<script>
+
+	if ($(window).width() < 768) {
+		$('.table').removeClass('text-center');
+	} else {
+		$('.table').addClass('text-center');
+	}
+
+</script>
+
+
+<script>
+
+	if ($(window).width() < 768) {
+		$('.card-body').removeClass('text-center');
+		$('.card').removeClass('box');
+		$('.card-header').removeClass('headerbox');
+	} else {
+		$('.card-body').addClass('text-center');
+	}
+
+</script>
+
+

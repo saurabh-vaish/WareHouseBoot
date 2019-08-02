@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="loginHeader">
+
+<head>
+  <meta charset="utf-8">
+  <title>WareHouse</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="" name="keywords">
+  <meta content="" name="description">
+
+  <!-- Favicons -->
+  <link th:href="@{/images/icons/logo.png}" rel="icon">
+  <link th:href="@{img/apple-touch-icon.png}" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800" rel="stylesheet">
+
+  <!-- Bootstrap CSS File -->
+	<link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet">
+
+  <!-- Libraries CSS Files -->
+  <link th:href="@{/webjars/font-awesome/5.7.2/css/all.css}" rel="stylesheet">
+  <link th:href="@{/webjars/animate/3.5.2/animate.min.css}" rel="stylesheet">
+  <link th:href="@{/lib/venobox/venobox.css}" rel="stylesheet">
+  <link th:href="@{/webjars/owl.carousel/2.3.4/dist/assets/owl.carousel.min.css}" rel="stylesheet">
+
+  <!-- Login Stylesheet File -->
+  <link th:href="@{/css/style.css}" rel="stylesheet">
+ 
+   <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css}">
+  <link th:href="@{/css/formLogin.css}" rel="stylesheet">
+  
+
+
+  <!-- =======================================================
+   author : saurabh vaish
+  ======================================================= -->
+</head>
+
+<body>
+
+  <!--==========================
+    Header
+  ============================-->
+  <header id="header" class="header-scrolled">
+    <div >
+      <nav id="nav-menu-container" class="navbar navbar-dark  navbar-expand-sm" >
+        <a href="#intro" class="scrollto">
+         	<img th:src="@{/images/icons/logo.png}" alt="" title="warehouse" class="navbar-brand active img shadow-lg ml-4 " style="max-width:45px;" />
+         </a>
+        <ul class="nav-menu ml-auto">
+        <li ><a href="${url}/login">Login</a></li>
+          <li ><a href="${url}/userr/register">Register</a></li>
+      
+        </ul>
+      </nav><!-- #nav-menu-container -->
+    </div>
+  </header><!-- #header -->
+
+<br>
+<br>

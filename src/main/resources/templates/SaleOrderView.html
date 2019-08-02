@@ -1,0 +1,324 @@
+<span th:replace="~{shared/Menubar :: header}"></span>
+
+
+<main class="container mt-5">
+
+
+
+<div class="card border-primary box">
+
+	<div class="card-header headerbox" style="background: #50d8af !important">
+		<h2 class="text-center">
+			<span >Welcome to Sale Order View Page</span>
+			<span class="float-right">
+				<a class="text-dark"  href="pdf?id=${saleOrder.saleId}"><i class="fa fa-print"></i></a>
+			</span>		
+		</h2>
+	</div>
+	<div class="card-body">
+				
+
+		<table class="table table-striped table-bordered table-hover text-center  ">
+					<tr >
+						<th class="col-6">ID</th>
+						<td class="col-6" th:text="${saleOrder.saleId}"></td>
+					</tr>
+					<tr>
+						<th class="col-6">Order Code</th>
+						<td class="col-6" th:text="${saleOrder.orderCode}"></td>
+					</tr>
+					<tr>
+						<th class="col-6">Shipment Code</th>
+						<td class="col-6" th:text="${saleOrder.shipmentCode.shipmentCode}"></td>
+					</tr>
+					<tr>
+						<th class="col-6">Customer</th>
+						<td class="col-6" th:text="${saleOrder.customer.whCode}"></td>
+					</tr>
+					<tr>
+						<th class="col-6">Ref Num</th>
+						<td class="col-6" th:text="${saleOrder.refNum}"></td>
+					</tr>
+					<tr>
+						<th class="col-6">Stock Mode</th>
+						<td class="col-6" th:text="${saleOrder.stockMode}"></td>
+					</tr>
+					<tr>
+						<th class="col-6">Stock Source</th>
+						<td class="col-6" th:text="${saleOrder.stockSource}"></td>
+					</tr>
+					<tr>
+						<th class="col-6">Status</th>
+						<td class="col-6" th:text="${saleOrder.status}"></td>
+					</tr>
+					
+					<tr>
+						<th class="col-6">Note</th>
+						<td class="col-6" th:text="${saleOrder.note}"></td>
+					</tr>
+					<tr>
+						<th class="col-6"><button class="btn btn-block btn-info launch-modal btnbox"   >Edit &nbsp;<i class="fa fa-edit"></i> </button></th>
+						<th class="col-6"><button class="btn btn-block btn-danger btnbox" data-toggle="modal" data-target="#delete"  >Delete &nbsp;<i class="fa fa-trash"></i> </button></th>
+						
+					</tr>
+			</table>
+		
+		
+	</div>
+	<div th:text="${msg != null}" class="card-footer text-danger bg-success">
+		<span th:text="${msg}"></span> 
+	</div>
+
+</div> <!-- card ended -->
+
+
+<!-- delete Modal -->
+<div class="modal" id="delete">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header bg-danger">
+        <h4 class="modal-title">Delete SaleOrder</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+       Sure ! You want to delete
+      </div>
+		<hr>
+      <!-- Modal footer -->
+      <div class="modal-footer container" style="display:block">
+      	<div class="row">
+      		<div class="col-6">
+		        <a class="btn btn-danger btn-block" th:href="@{delete/{id}(id=${saleOrder.saleId})}">Yes</a>
+      		</div>
+      		<div class="col-6">
+		        <button type="button" class="btn btn-success btn-block" data-dismiss="modal" >No</button>
+      		</div>
+      	</div>
+      
+      </div>
+
+    </div>
+  </div>
+</div>
+
+	<br>
+
+<!-- edit Modal -->
+
+<div class="modal " id="edit">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header bg-success text-center">
+        <h4 class="modal-title text-center">Edit SaleOrder</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body text-center">
+      
+      <form  th:action="@{update}" method="POST" th:object="${saleOrder}" class="form form-horizontal">
+					
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="saleId" class="control-label">Id</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<input type="text" th:field="*{saleId}" class="form-control" required="true" readonly="true"/>
+								<div class="text-left">
+									<span th:errors="*{saleId}" class="text-danger" ></span>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="orderCode" class="control-label">Order Code</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<input type="text" th:field="*{orderCode}" class="form-control" required="true" placeholder="Enter Order Code"/>
+								<div class="text-left">
+									<span th:errors="*{orderCode}" class="text-danger" ></span>
+									<span id="msg" class="text-danger"></span>
+								</div>
+							</div>
+						</div>
+						
+					
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="shipmentCode.shipmentId" class="control-label">Shipment Code</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<select th:field="*{shipmentCode.shipmentId" class="form-control" required="true"> 
+										<option value="">-Select Shipment Code-</option>
+										 <options items="${listshipment}" ></options>
+								</select>
+							<div class="text-left"><span th:errors="*{shipmentCode}" class="text-danger" ></span>	</div>
+							</div>
+						</div>
+						
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="vendor.whId" class="control-label">Customer</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<select th:field="*{customer.whId" class="form-control" required="true">
+										<option value="">-Select Customer-</option>
+										<options items="${listcustomer}" ></options>
+								</select>
+							<div class="text-left"><span th:errors="*{customer}" class="text-danger" ></span>	</div>
+							</div>
+						</div>
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="refNum" class="control-label">Ref Num</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<input type="text" th:field="*{refNum}" class="form-control num" required="true" placeholder="Enter Ref Number"/>
+								
+							<div class="text-left"><span th:errors="*{refNum}" class="text-danger" ></span> </div>
+							</div>
+						</div>
+
+
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12">
+								<label for="qualityCheck" class="control-label">Stock Mode</label>
+							</div>
+							<div class="col-md-6 col-xs-12 text-left">
+								<div class="form-check-inline">
+									<label class="form-check-label" for="stockMode1"> 
+										<input type="radio" th:field="*{stockMode}" value="GRADE" class="form-check-input" />Grade
+									</label>
+								</div>
+								<div class="form-check-inline">
+									<label class="form-check-label" for="stockMode2">
+										 <input type="radio" th:field="*{stockMode}" value="MARGIN" class="form-check-input" />Margin
+									</label>
+								</div>
+								<div class="text-left">
+									<span th:errors="*{stockMode}" class="text-danger" ></span>
+								</div>
+							</div>
+						</div>
+
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="vendor.whId" class="control-label">Stock Source</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<select th:field="*{stockSource}" class="form-control" required="true">
+										<option value="">-Select-</option>
+										<option value="OPEN">Open</option>
+										<option value="AVAIL">Avail</option>
+										<option value="REFUND">Refund</option>
+								</select>
+							<div class="text-left"><span th:errors="*{stockSource}" class="text-danger" ></span>	</div>
+							</div>
+						</div>
+
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="status" class="control-label">Default Status</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<input type="text" th:field="*{status" class="form-control num" required="true" value="OPEN" readonly="true"/>
+								<span class="errmsg text-danger"></span>
+							
+							<div class="text-left"><span th:errors="*{status}" class="text-danger" ></span> </div>
+							</div>
+						</div>
+						
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="note" class="control-label">DESCRIPTION</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<textarea th:field="*{note}" class="form-control" required="true" placeholder="Enter Any Note"></textarea>
+							<div class="text-left"><span th:errors="*{note}" class="text-danger" ></span>	</div>
+							</div>
+						</div>
+						<br>
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+							
+							</div>
+							<div class="col-md-6 col-xs-12 text-left">
+								<button type="submit"  class="btn btn-rounded btn-success btnbox" >Update&nbsp;<i class="fa fa-send"></i></button>
+							</div>
+							
+						</div>
+	
+				</form>
+        
+			
+
+	 </div>
+		<!-- Modal footer -->
+      <div class="modal-footer">
+      	        <button type="button" class="btn btn-info" data-dismiss="modal" >close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</main>
+
+<span th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</span>
+
+
+<script>
+
+	if ($(window).width() < 768) {
+		$('.table').removeClass('text-center');
+	} else {
+		$('.table').addClass('text-center');
+	}
+
+</script>
+
+
+<script>
+
+	if ($(window).width() < 768) {
+		$('.card-body').removeClass('text-center');
+		$('.card').removeClass('box');
+		$('.card-header').removeClass('headerbox');
+	} else {
+		$('.card-body').addClass('text-center');
+	}
+
+</script>
+
+
+<script>
+
+	if ($(window).width() < 768) {
+		$('.modal-body').removeClass('text-center');
+	} else {
+		$('.modal-body').addClass('text-center');
+	}
+
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$('.launch-modal').click(function(){
+		$('#edit').modal({
+			backdrop: 'static'
+		});
+	}); 
+});
+</script>
+

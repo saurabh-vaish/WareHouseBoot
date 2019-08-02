@@ -1,0 +1,94 @@
+<span th:replace="~{shared/Menubar :: header}"></span>
+
+<main class="container mt-3">
+
+<style>
+
+	table.table-hover tbody tr:hover {
+	    background-color: #50d8af !important; 
+	    box-shadow:10px 10px 10px 15px rgba(73, 78, 92, 0.1);
+}
+				th{
+					color: #50d8af !important;
+				}
+</style>
+
+
+<div class="card border-primary box">
+
+	<div class="card-header headerbox" style="background: #50d8af !important">
+		<h2 class="text-center">Welcome to Shipment Type Data Page</h2>
+	</div>
+	<div class="card-body">
+				
+		<h3 th:if="${list == null}">Data Not Found!</h3>
+	
+	<div class="table-responsive">
+	
+		<table th:if="${list !=null }" class="table table-striped table-bordered table-hover text-center  ">
+				<tr class="thead-dark ">
+					<th>ID</th>
+					<th>MODE</th>
+					<th>CODE</th>
+					<th colspan="3">OPRATION</th>
+				</tr>
+					<tr class="text-center" th:each="obj:${list}">
+						<td th:text="${obj.shipmentId}"></td>
+						<td th:text="${obj.shipmentMode}"></td>
+						<td th:text="${obj.shipmentCode}"></td>
+						<td><a th:href="@{view/{id}(id=${obj.shipmentId})}" class="btn btn-success">View&nbsp;<i class="fa fa-eye"></i> </a></td>
+						<td><a class="btn btn-primary" th:href="@{excel?id={id}(id=${obj.shipmentId})}">Excel &nbsp;<i class="fa fa-file-excel-o"></i></a></td>
+						<td><a class="btn btn-info"  th:href="@{pdf?id={id}(id=${obj.shipmentId})}">Pdf &nbsp;<i class="fa fa-file-pdf-o"></i></a></td>
+						
+					</tr>
+					
+				<tr class="thead-dark ">
+					<th><button class="btn btn-info">Reports </button></th>
+					<th colspan=2>
+						<a href="excel" >
+						<img th:src="@{/images/icons/BulkExcel.png}" class="img img-responsive img-rounded" width="70" height="50" title="Export Data to Excel" /></a>
+					</th>
+					<th colspan=2>
+		<a href="pdf" ><img th:src="@{/images/icons/BulkPdf.png}" width="70" height="50" title="Export Data to pdf" />  </a>
+					</th>
+					<th colspan="5">
+		<a href="chart" > <img th:src="@{/images/icons/charts.png}" width="70" height="50" title="Export Data to Excel" /> </a>
+					</th>
+				</tr>
+			</table>
+		
+		</div>
+	</div>
+	<div class="card-footer" th:if="${msg != null }" style="background: #50d8af !important">
+		<span th:text="${msg}"></span>
+	</div>
+	
+
+</div> <!-- card ended -->
+
+
+	<br>
+
+
+</main>
+
+<th:block th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</th:block>
+
+
+
+
+<script>
+
+	if ($(window).width() < 768) {
+		$('.card-body').removeClass('text-center');
+		$('.card').removeClass('box');
+		$('.card-header').removeClass('headerbox');
+		$('.table').addClass('table-sm')
+	} else {
+		$('.card-body').addClass('text-center');
+		
+	}
+
+</script>
+

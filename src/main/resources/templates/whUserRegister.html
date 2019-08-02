@@ -1,0 +1,285 @@
+<span th:replace="~{shared/Menubar :: header}"></span>
+
+<main class="container mt-3">
+
+
+<div th:if="${msg}" class=" flex-row-reverse ">
+	    <div class="alert alert-success p-2" role="alert">
+	        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <strong  th:text="${msg}"></strong> 
+	    </div>
+ </div>
+<div th:if="${emsg}" class=" flex-row-reverse">
+	    <div class="alert alert-danger p-2" role="alert">
+	        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <strong  th:text="${emsg}" ></strong> 
+	    </div>
+</div>
+
+
+<div class="card border-primary box">
+
+	<div class="card-header headerbox" style="background: #50d8af !important">
+		<h2 class="text-center">Welcome to WhUser Register Page</h2>
+	</div>
+	<div class="card-body text-center">
+				
+			<form th:action="@{save}" method="POST" th:object="${whUser}" class="form form-horizontal">
+						
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12">
+								<label for="whType" class="control-label">User Type</label>
+							</div>
+							<div class="col-md-6 col-xs-12 text-left">
+								<div class="form-check-inline">
+									<label class="form-check-label" for="whType1"> 
+										<input type="radio" th:field="*{whType}"  class="form-check-input" value="Vendor"/>Vendor 
+									</label>
+								</div>
+								<div class="form-check-inline">
+									<label class="form-check-label" for="whType2">
+										 <input type="radio" th:field="*{whType}"  class="form-check-input" value="Customer"/>Customer
+									</label>
+								</div>
+								
+								<div class="text-left">
+									<span th:errors="*{whType}" class="text-danger" ></span>
+								</div>
+							</div>
+						</div>
+						
+				
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="whCode" class="control-label">User Code</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<input type="text" th:field="*{whCode}" class="form-control" required="true" placeholder="Enter User Code"/>
+								<div class="text-left">
+									<span th:errors="*{whCode}" class="text-danger" ></span>
+									<span id="code" class="text-danger"></span>
+								</div>
+							</div>
+						</div>
+
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="whName" class="control-label">User Name</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<input type="text" th:field="*{whName}" class="form-control" required="true" placeholder="Enter User Name"/>
+								<div class="text-left">
+									<span th:errors="*{whName}" class="text-danger"></span>
+								</div>
+							</div>
+						</div>
+						
+						
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="whFor" class="control-label">User For</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<select th:field="*{whFor}" class="form-control" required="true">
+										<option value="">--Select--</option>
+										<option value="purchase">Purchase</option>
+										<option value="sale">Sale</option>
+								</select>
+							<div class="text-left"><span th:errors="*{whFor}" class="text-danger" ></span>	</div>
+							</div>
+						</div>
+						
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="whEmail" class="control-label">User Email</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<input type="text" th:field="*{whEmail}" class="form-control" required="true" placeholder="Enter User Email"/>
+								<div class="text-left">
+									<span th:errors="*{whEmail}" class="text-danger" ></span>
+									<span id="email" class="text-danger"></span>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="whContact" class="control-label">User Contact</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<input type="text" th:field="*{whContact}" class="form-control" required="true" placeholder="Enter User Contact"/>
+								<div class="text-left">
+									<span th:errors="*{whContact}" class="text-danger" ></span>
+									<span id="contact" class="text-danger"></span>
+								</div>
+							</div>
+						</div>
+					
+
+
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="whIdType" class="control-label">User Id Type </label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<select th:field="*{whIdType}" class="form-control" required="true">
+										<option value="">--Select--</option>
+										<option value="Pancard">Pancard</option>
+										<option value="Aadhar">Aadhar</option>
+										<option value="VoterId">Voter Id</option>
+										 <option value="Other">Other</option>
+								</select>
+							<div class="text-left"><span th:errors="*{whIdType}" class="text-danger" ></span>	</div>
+							</div>
+						</div>
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="whNum" class="control-label">User Id Number</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<input type="text" th:field="*{whNum}" class="form-control" required="true" placeholder="Enter Id Number"/>
+							<div class="text-left">
+								<span th:errors="*{whNum}" class="text-danger" ></span>	
+								<span id="idNum" class="text-danger"></span>	
+							</div>
+							</div>
+						</div>
+						<br>
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+							
+							</div>
+							<div class="col-md-6 col-xs-12 text-left">
+								<input type="submit" value="Create User" class="btn btn-rounded btn-success btnbox" />
+							</div>
+							
+						</div>
+				</form>
+			
+	</div>
+	<div th:if="${msg != null }" class="card-footer text-white bg-success">
+		<span th:text="${msg}"></span> 
+			<a th:if="${whUserId != null }"  th:href="@{view/{id}(id=${whUserId})}"  class="btn btn-primary float-right" >View &nbsp;<i class="fa fa-eye"></i></a>
+	</div>
+
+</div> <!-- card ended -->
+
+<br><br>
+
+</main>
+
+<th:block th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</th:block>
+
+
+<script>
+
+	if ($(window).width() < 768) {
+		$('.card-body').removeClass('text-center');
+		$('.card').removeClass('box');
+		$('.card-header').removeClass('headerbox');
+	} else {
+		$('.card-body').addClass('text-center');
+	}
+
+</script>
+
+
+<!--  For User Code -->
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#whCode").change(function(){
+		$.ajax({
+			url:'check',
+			data:{'data':$("#whCode").val()},
+			success:function(resp){
+				console.log('my message' + resp);
+				$("#code").text(resp);
+				if(resp!='')
+					{
+						$("#whCode").val("");
+						$("#whCode").focus();
+					}
+			},
+			error: function(resp, err){ console.log('my message' + err.responseText); }
+		});
+		//console.log("resp"+resp)
+	});
+});
+</script>
+
+<!--  For User Email -->
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#whEmail").change(function(){
+		$.ajax({
+			url:'check',
+			data:{'data':$("#whEmail").val()},
+			success:function(resp){
+				console.log('my message' + resp);
+				$("#email").text(resp);
+				if(resp!='')
+					{
+						$("#whEmail").val("");
+						$("#whEmail").focus();
+					}
+			},
+			error: function(resp, err){ console.log('my message' + err.responseText); }
+		});
+		//console.log("resp"+resp)
+	});
+});
+</script>
+
+
+<!--  For User Contact -->
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#whContact").change(function(){
+		$.ajax({
+			url:'check',
+			data:{'data':$("#whContact").val()},
+			success:function(resp){
+				console.log('my message' + resp);
+				$("#contact").text(resp);
+				if(resp!='')
+					{
+						$("#whContact").val("");
+						$("#whContact").focus();
+					}
+			},
+			error: function(resp, err){ console.log('my message' + err.responseText); }
+		});
+		//console.log("resp"+resp)
+	});
+});
+</script>
+
+
+<!--  For User Id Number -->
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#whNum").change(function(){
+		$.ajax({
+			url:'check',
+			data:{'data':$("#whNum").val()},
+			success:function(resp){
+				console.log('my message' + resp);
+				$("#idNum").text(resp);
+				if(resp!='')
+					{
+						$("#whNum").val("");
+						$("#whNum").focus();
+					}
+			},
+			error: function(resp, err){ console.log('my message' + err.responseText); }
+		});
+		//console.log("resp"+resp)
+	});
+});
+</script>
+

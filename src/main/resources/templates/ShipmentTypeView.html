@@ -1,0 +1,301 @@
+<span th:replace="~{shared/Menubar :: header}">
+</span>
+
+<main class="container mt-3">
+
+<div th:if="${msg}" class=" flex-row-reverse ">
+	    <div class="alert alert-success p-2" role="alert">
+	        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <strong  th:text="${msg}"></strong> 
+	    </div>
+ </div>
+<div th:if="${emsg}" class=" flex-row-reverse">
+	    <div class="alert alert-danger p-2" role="alert">
+	        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <strong  th:text="${emsg}" ></strong> 
+	    </div>
+</div>
+
+
+<div class="card border-primary box">
+
+	<div class="card-header headerbox" style="background: #50d8af !important">
+		<h2 class="text-center">
+			<span >Welcome to Shipment Type View Page</span>
+			<span class="float-right">
+				<a class="text-dark"  th:href="@{/shipment/pdf?id={id}(id=${shipment.shipmentId})}"><i class="fa fa-print"></i></a>
+			</span>		
+		</h2>
+	</div>
+	<div class="card-body">
+				
+
+				<table class="table table-striped table-bordered table-hover text-center  ">
+			
+						<tr>
+							<th class="col-6">ID</th>
+							<td class="col-6" th:text="${shipment.shipmentId}"></td>
+						</tr>
+						<tr>
+							<th class="col-6">MODE</th>
+							<td class="col-6" th:text="${shipment.shipmentMode}"></td>
+						</tr>
+						<tr>
+							<th class="col-6">CODE</th>
+							<td class="col-6" th:text="${shipment.shipmentCode}"></td>
+						</tr>
+						<tr>
+							<th class="col-6">ENABLE</th>
+							<td class="col-6" th:text="${shipment.enableShipment}"></td>
+						</tr>
+						<tr>
+							<th class="col-6">GRADE</th>
+							<td class="col-6" th:text="${shipment.shipmentGrade}"></td>
+						</tr>
+						<tr>
+							<th class="col-6">NOTE</th>
+							<td class="col-6" th:text="${shipment.note}"></td>
+						</tr>
+			
+
+					<tr> 
+						<th class="col-6"><button class="btn btn-block btn-info launch-modal btnbox"   >Edit &nbsp;<i class="fa fa-edit"></i> </button></th>
+						<th class="col-6"><button class="btn btn-block btn-danger btnbox" data-toggle="modal" data-target="#delete"  >Delete &nbsp;<i class="fa fa-trash"></i> </button></th>
+						
+					</tr>
+			</table>
+		
+		
+	</div>
+	<div th:if="${msg != null }" class="card-footer text-white bg-success">
+		<span th:text="${msg}"></span>
+	</div>
+
+</div> <!-- card ended -->
+
+
+<!-- delete Modal -->
+<div class="modal" id="delete">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header bg-danger">
+        <h4 class="modal-title">Delete Shipment</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+       Sure ! You want to delete
+      </div>
+		<hr>
+      <!-- Modal footer -->
+      <div class="modal-footer container" style="display:block">
+      	<div class="row">
+      		<div class="col-6">
+		        <a class="btn btn-danger btn-block" th:href="@{/shipment/delete/{id}(id=${shipment.shipmentId})}">Yes</a>
+      		</div>
+      		<div class="col-6">
+		        <button type="button" class="btn btn-success btn-block" data-dismiss="modal" >No</button>
+      		</div>
+      	</div>
+      
+      </div>
+
+    </div>
+  </div>
+</div>
+
+	<br>
+
+<!-- edit Modal -->
+
+<div class="modal " id="edit">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header bg-success text-center">
+        <h4 class="modal-title text-center">Edit Shipment</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body text-center">
+        
+      		  <form th:action="@{/shipment/update}" method="POST" th:object="${shipment}" class="form form-horizontal">
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="shipmentId" class="control-label ">Shipment Id</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<input type="text" th:field="*{shipmentId}" class="form-control"  readonly="true"/>
+								<div class="text-left">
+									<span th:errors="*{shipmentId}" class="text-danger" ></span>
+								</div>
+							</div>
+						</div>
+						
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="shipmentMode" class="control-label">Shipment Mode</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<select th:field="*{shipmentMode}" class="form-control" required="true">
+										<option value="">-Select Shipment Mode-</option>
+										<option value="AIR">Air</option>
+										<option value="TRUCK">Truck</option>
+										<option value="SHIP">Ship</option>
+										<option value="TRAIN">Train</option>
+								</select>
+							<div class="text-left"><span th:errors="*{shipmentMode}" class="text-danger" ></span></div>
+							</div>
+						</div>
+						
+				
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="shipmentCode" class="control-label">Shipment Code</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<input th:field="*{shipmentCode}" class="form-control" required="true" placeholder="Enter Shipment Code"/>
+								<div class="text-left">
+									<span th:errors="*{shipmentCode}" class="text-danger" ></span>
+									<span id="msg" class="text-danger"></span>
+								</div>
+							</div>
+						</div>
+						
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="enableShipment" class="control-label">Enable Shipment</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<select th:field="*{enableShipment}" class="form-control" required="true">
+										<option value="">-Select-</option>
+										<option value="YES">Yes</option>
+										<option value="NO">No</option>
+								</select>
+							<div class="text-left"><span th:errors="*{enableShipment}" class="text-danger" ></span>	</div>
+							</div>
+						</div>
+						
+						
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12">
+								<label for="shipmentGrade" class="control-label">Shipment Grade</label>
+							</div>
+							<div class="col-md-6 col-xs-12 text-left">
+								<div class="form-check-inline">
+									<label class="form-check-label" for="shipmentGrade1"> 
+										 <input type="radio"  th:field="*{shipmentGrade}"  class="form-check-input" value="A" />A
+									</label>
+								</div>
+								<div class="form-check-inline">
+									<label class="form-check-label" for="shipmentGrade2">
+										 <input type="radio"  th:field="*{shipmentGrade}"  class="form-check-input" value="B" />B
+									</label>
+								</div>
+								<div class="form-check-inline">
+									<label class="form-check-label" for="shipmentGrade3">
+										 <input type="radio" th:field="*{shipmentGrade}"  class="form-check-input" value="C" />C
+									</label>
+								</div>
+								<div class="text-left">
+									<span th:errors="*{shipmentGrade}" class="text-danger" ></span>
+								</div>
+							</div>
+						</div>
+						
+						
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="note" class="control-label">DESCRIPTION</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<textarea th:field="*{note}" class="form-control" required="true" placeholder="Enter Any Note"></textarea>
+							<div class="text-left"><span th:errors="*{note}" class="text-danger" ></span>	</div>
+							</div>
+						</div>
+						
+						<br>
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+							
+							</div>
+							<div class="col-md-6 col-xs-12 text-left">
+								<input type="submit" value="update" class="btn btn-rounded btn-block btn-success btnbox" />
+							</div>
+							
+						</div>
+	
+				</form>
+        
+		
+
+	 </div>
+		<!-- Modal footer -->
+      <div class="modal-footer">
+      	        <button type="button" class="btn btn-info" data-dismiss="modal" >close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</main>
+
+<th:block th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</th:block>
+
+
+<script>
+
+	if ($(window).width() < 768) {
+		$('.table').removeClass('text-center');
+	} else {
+		$('.table').addClass('text-center');
+	}
+
+</script>
+
+
+<script>
+
+	if ($(window).width() < 768) {
+		$('.card-body').removeClass('text-center');
+		$('.card').removeClass('box');
+		$('.card-header').removeClass('headerbox');
+	} else {
+		$('.card-body').addClass('text-center');
+	}
+
+</script>
+
+<script>
+
+	if ($(window).width() < 768) {
+		$('.modal-body').removeClass('text-center');
+	} else {
+		$('.modal-body').addClass('text-center');
+	}
+
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$('.launch-modal').click(function(){
+		$('#edit').modal({
+			backdrop: 'static'
+		});
+	}); 
+});
+</script>
+

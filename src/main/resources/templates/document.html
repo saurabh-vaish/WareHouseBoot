@@ -1,0 +1,180 @@
+<span th:replace="~{shared/Menubar :: header}"></span>
+
+<main class="container mt-5">
+
+<style>
+
+	table.table-hover tbody tr:hover {
+	    background-color: #50d8af !important; 
+	    box-shadow:10px 10px 10px 15px rgba(73, 78, 92, 0.1);
+}
+				th{
+					color: #50d8af !important;
+				}
+
+</style>
+
+
+<div class="card border-primary box">
+
+	<div class="card-header headerbox" style="background: #50d8af !important">
+		<h2 class="text-center">Welcome to Documents Page</h2>
+	</div>
+	<div class="card-body">
+			
+			<button class="btn btn-block btn-success launch-modal btnbox"  > Upload Documents &nbsp;<i class="fa fa-edit"></i> </button>
+						
+		
+		<br><br>
+				
+			<h3 th:if="${list == null}">Data Not Found!</h3>
+
+	<div class="table-responsive">
+	
+		<c:if test="${!empty list }">
+		<table class="table table-striped table-bordered table-hover text-center  ">
+				<tr class="thead-dark ">
+						<th>File Name</th>
+						<th>Download</th>
+					</tr>
+						<tr th:each="ob:${list}">
+							<!-- for file name -->
+							<td th:text="${ob[1]}"></td>
+							<td><a  th:href="@{download/{fid}(fid=${ob[0]})}" class="btn btn-primary btnbox">Download</a></td>
+						</tr>
+					
+			</table>
+		</div>
+	</div>
+	<div th:if="${msg != null}" class="card-footer " style="background: #50d8af !important">
+		<span th:text="${msg}"></span>
+	</div>
+
+</div> <!-- card ended -->
+
+
+	<br>
+
+
+<!-- edit Modal -->
+
+<div class="modal " id="edit">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header bg-primary text-center">
+        <h4 class="modal-title text-center">Upload Document</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body text-center">
+
+				<form action="upload" method="post" enctype="multipart/form-data">
+					<!--  for file we have to use enctype="multipart/form-data" -->
+
+					<div class="row form-group">
+						<div class="col-md-4 col-xs-12 ">
+							<label for="fileData" class="control-label">Choose File</label>
+						</div>
+						<div class="col-md-6 col-xs-12">
+							<input type="file" name="fileData" id="fileData" class="form-control" required="true"/>
+							
+						</div>
+					</div>
+					<!-- it is used to save from csrf attack i.e. Cross-Site Request Forgery(CSRF)
+						by default it is enabled in spring security , so we need this to include it our form 
+						it is fix input .
+					   -->
+							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+				added
+					
+					<br>
+					<div class="row form-group">
+						<div class="col-md-4 col-xs-12 "></div>
+						<div class="col-md-6 col-xs-12 text-left">
+							<button type="submit" class="btn btn-success align-left btnbox"> Upload &nbsp;<i class="fa fa-upload"></i>
+							</button>
+						</div>
+
+					</div>
+
+				</form>
+
+			</div>
+		<!-- Modal footer -->
+      <div class="modal-footer">
+      	        <button type="button" class="btn btn-info" data-dismiss="modal" >close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+</main>
+
+
+<span th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</span>
+
+
+
+
+<script>
+
+	if ($(window).width() < 768) {
+		$('.card-body').removeClass('text-center');
+		$('.card').removeClass('box');
+		$('.card-header').removeClass('headerbox');
+		$('.table').addClass('table-sm')
+	} else {
+		$('.card-body').addClass('text-center');
+		
+	}
+
+</script>
+
+
+<script>
+
+	if ($(window).width() < 768) {
+		$('.table').removeClass('text-center');
+	} else {
+		$('.table').addClass('text-center');
+	}
+
+</script>
+
+
+<script>
+
+	if ($(window).width() < 768) {
+		$('.modal-body').removeClass('text-center');
+	} else {
+		$('.modal-body').addClass('text-center');
+	}
+
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$('.launch-modal').click(function(){
+		$('#edit').modal({
+			backdrop: 'static'
+		});
+	}); 
+});
+</script>
+
+
+
+
+
+
+
+
+

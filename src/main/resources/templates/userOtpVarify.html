@@ -1,0 +1,98 @@
+<span th:replace="~{shared/Menubar :: header}"></span>
+
+<main class="container mt-5">
+
+
+<div class="card border-primary box">
+
+	<div class="card-header headerbox" style="background: #50d8af !important">
+		<h2 class="text-center">Enter OTP</h2>
+	</div>
+	<div class="card-body text-center">
+				
+				
+			<form action="otp" method="post" class="form form-horizontal">
+				
+				<div class="row justify-content-md-center">
+				
+					 <div class="col-md-auto">
+				      
+						<input type="text" id="id" name="id" class="form-control" placeholder = "Enter OTP"> <br>
+			
+						
+							<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+							
+						<input type="submit" value="Send" class="btn btn-success btn-rounded btnbox" > 
+				    </div>
+			 
+				</div>
+				
+			</form>
+			
+				<div  class="text-primary text-strong text-center">
+					<i class="fa fa-hourglass-half" id="time"></i>
+				</div>
+				
+			
+			
+			
+	</div>
+		<div th:if="${msg != null}" class="card-footer text-white bg-success">
+			<span th:text="${msg}"></span>
+		</div>
+
+</div> <!-- card ended -->
+
+<br><br>
+
+</main>
+
+
+<span th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</span>
+
+
+<script>
+
+	if ($(window).width() < 768) {
+		$('.card-body').removeClass('text-center');
+		$('.card').removeClass('box');
+		$('.card-header').removeClass('headerbox');
+	} else {
+		$('.card-body').addClass('text-center');
+	}
+
+</script>
+
+
+
+<script type="text/javascript">
+
+	var minute = 1;
+	var timeLeft = 119;
+	var elem = document.getElementById('time');
+	var timerId = setInterval(countdown, 1000);
+	
+	
+	function countdown() {
+	    if (timeLeft == -1) {
+	        clearTimeout(timerId);
+	        doSomething();
+	    } else {
+	    		if(timeLeft<=60)
+	        {
+	        		minute=0;
+	        }
+	        elem.innerHTML = minute + ' : '+ Math.round(timeLeft%60)+' seconds remaining';
+	        timeLeft--;
+	    }
+	}
+	
+	function doSomething() {
+		elem.innerHTML = 'OTP Expired Redirecting... ';
+		
+		window.location.href = "http://localhost:2250/WareHousePro/userr/register?msg=OTP Expired !! Register Again";    // custom link paste when when u chaged
+	}
+
+</script>
+

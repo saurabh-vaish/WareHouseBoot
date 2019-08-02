@@ -1,0 +1,221 @@
+<span th:replace="~{shared/Menubar :: header}"></span>
+
+<main class="container mt-5">
+
+		<div th:if="${param.msg != null}" class="card-footer text-white bg-success">
+			<h5 class="text-white" th:text="${param.msg}"></h5>
+		</div>
+	<br>
+
+<div class="card border-primary box">
+
+	<div class="card-header headerbox" style="background: #50d8af !important">
+		<h2 class="text-center">Welcome to User Register Page</h2>
+	</div>
+	<div class="card-body text-center">
+				
+				<form th:action="@{save}" method="POST" th:object="${user}" class="form form-horizontal">
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="userName" class="control-label">User Name </label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<input type="text" th:field="*{userName}" class="form-control" required="true" placeholder="Enter Full Name"/>
+								<div class="text-left">
+										<span th:errors="*{userName}" class="text-danger" ></span>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row form-group">
+				       
+				       		<div class="col-md-4 col-xs-12">
+				       			<label for="gender" class="control-label">Gender</label> 
+				       		</div>
+				       		<div class="col-md-6 col-xs-12 text-left">
+				       			<div class="form-check-inline">
+							      <label class="form-check-label" for="gender1">
+						       			<input type="radio" th:field="*{gender}" value="Male" class="form-check-input" />Male   
+							      </label>
+							    </div>
+							    <div class="form-check-inline">
+							      <label class="form-check-label" for="gender2">
+					       			<input type="radio" th:field="*{gender}" value="Female" class="form-check-input" />Female
+							      </label>
+							    </div>
+							   <div class="text-left"><span th:errors="*{gender}" class="text-danger" ></span></div>
+				       		</div>
+				       		
+				       </div>
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="userEmail" class="control-label">User Email</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<input type="email" th:field="*{userEmail}" class="form-control num" required="true" placeholder="Enter Valid Email"/>
+								<div class="text-left">
+									<span th:errors="*{userEmail}" class="text-danger" ></span>
+									<span id="msg" class="text-danger text-left"></span>
+								 </div>
+							</div>
+						</div>
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="userMobile" class="control-label">Mobile</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<input type="text" th:field="*{userMobile}" class="form-control num" required="true" placeholder="Enter Valid Number"/>
+								<div class="text-left">
+									<span th:errors="*{userMobile}" class="text-danger" ></span>
+									<span id="msgm" class="text-danger text-left"></span>
+								 </div>
+							</div>
+						</div>
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="userPwd" class="control-label">Password</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<input type="password" th:field="*{userPwd}" class="form-control num" required="true" placeholder="Enter Password" onKeyUp="checkPasswordStrength();"/>
+							
+							<div class="text-left">
+								<span id="password-strength-status"></span><br>
+								<span th:errors="*{userPwd}" class="text-danger" ></span>
+							</div>
+							</div>
+						</div>
+
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12">
+								<label for="roles" class="control-label">Roles</label>
+							</div>
+							<div class="col-md-6 col-xs-12 text-left">
+								<div class="form-check-inline">
+									<label class="form-check-label" for="roles1"> 
+										<input type="checkbox" th:field="*{roles}" value="ADMIN" class="form-check-input" />Admin
+									</label>
+								</div>
+								<div class="form-check-inline">
+									<label class="form-check-label" for="roles2">
+										<input type="checkbox" th:field="*{roles}" value="EMPLOYEE" class="form-check-input" />Employee
+									</label>
+								</div>
+								<div class="text-left">
+									<span th:errors="*{roles}" class="text-danger" ></span>
+								</div>
+							</div>
+						</div>
+
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+							
+							</div>
+							<div class="col-md-6 col-xs-12 text-left">
+								<input type="submit" value="Register" class="btn btn-rounded btn-success btnbox" />
+							</div>
+							
+						</div>
+						
+				</form>
+	
+	</div>
+		<div th:if="${ msg != null}" class="card-footer text-white bg-danger">
+			<span th:text="${msg}"></span>
+		</div>
+
+</div> <!-- card ended -->
+
+<br><br>
+
+</main>
+
+<span th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</span>
+
+
+<script>
+
+	if ($(window).width() < 768) {
+		$('.card-body').removeClass('text-center');
+		$('.card').removeClass('box');
+		$('.card-header').removeClass('headerbox');
+	} else {
+		$('.card-body').addClass('text-center');
+	}
+
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#userEmail").change(function(){
+		$.ajax({
+			url:'check',
+			data:{'email':$("#userEmail").val()},
+			success:function(resp){
+				console.log('my message' + resp);
+				$("#msg").text(resp);
+				if(resp!='')
+					{
+						$("#userEmail").val("");
+						$("#userEmail").focus();
+					}
+			},
+			error: function(resp, err){ console.log('my message' + err.responseText); }
+		});
+		//console.log("resp"+resp)
+	});
+});
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#userMobile").change(function(){
+		$.ajax({
+			url:'checkM',
+			data:{'mobile':$("#userMobile").val()},
+			success:function(resp){
+				console.log('my message' + resp);
+				$("#msgm").text(resp);
+				if(resp!='')
+					{
+						$("#userMobile").val("");
+						$("#userMobile").focus();
+					}
+			},
+			error: function(resp, err){ console.log('my message' + err.responseText); }
+		});
+		//console.log("resp"+resp)
+	});
+});
+</script>
+
+
+<script>
+	
+	function checkPasswordStrength() {
+		var number = /([0-9])/;
+		var alphabets = /([a-zA-Z])/;
+		var special_characters = /([~,!,@,#,$,%,^,&,*,-,_,+,=,?,>,<])/;
+		if($('#userPwd').val().length<6) {
+		$('#password-strength-status').removeClass();
+		$('#password-strength-status').addClass('text-danger');
+		$('#password-strength-status').html("Weak (should be atleast 6 characters.)");
+		} else {  	
+		if($('#userPwd').val().match(number) && $('#userPwd').val().match(alphabets) && $('#userPwd').val().match(special_characters)) {            
+		$('#password-strength-status').removeClass();
+		$('#password-strength-status').addClass('text-success');
+		$('#password-strength-status').html("Strong");
+		} else {
+		$('#password-strength-status').removeClass();
+		$('#password-strength-status').addClass('text-warning');
+		$('#password-strength-status').html("Medium (should contain number,lowercase, uppercase and special characters.)");
+		}}}
+	
+</script>

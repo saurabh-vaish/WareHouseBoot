@@ -1,0 +1,171 @@
+<span th:replace="~{shared/Menubar :: header}"></span>
+
+<main class="container mt-5">
+
+
+<div class="card border-primary box">
+
+	<div class="card-header headerbox" style="background: #50d8af !important">
+		<h2 class="text-center">Welcome to Shipping Register Page</h2>
+	</div>
+	<div class="card-body text-center">
+				
+			<form th:action="@{insert}" method="post" th:object="${shipping}" class="form form-horizontal">
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="shipCode" class="control-label">Shipping Code</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<input type="text" th:field="*{shipCode}" class="form-control"  placeholder="Enter Shipping Code"/>
+								<div class="text-left">
+									<span th:errors="*{shipCode}" class="text-danger" ></span>
+									<span id="msg" class="text-danger text-left"></span>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="shipRefNum" class="control-label">Shipping Refrence Number</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<input type="text" th:field="*{shipRefNum}" class="form-control num" required="true" placeholder="Enter Ref Number"/>
+								
+							<div class="text-left"><span th:errors="*{shipRefNum}" class="text-danger" ></span> </div>
+							</div>
+						</div>
+					
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="saleOrder.saleId" class="control-label">Sale Order Code</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<select th:field="*{saleOrder.saleId}" class="form-control" required="true"> 
+										<option value="">-Select -</option>
+										<options items="${saleOrder}" />
+								</select>
+							<div class="text-left"><span th:errors="*{saleOrder.saleId}" class="text-danger" ></span>	</div>
+							</div>
+						</div>
+						
+
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="courRefNum" class="control-label">Courier Reference Number</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<input type="text" th:field="*{courRefNum}" class="form-control num" required="true" />
+								
+							<div class="text-left"><span th:errors="*{courRefNum}" class="text-danger" ></span> </div>
+							</div>
+						</div>
+
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="couContdtls" class="control-label">Courier Contact Number</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<input type="text" th:field="couContdtls" class="form-control num" required="true" />
+								
+							<div class="text-left"><span th:field="*{couContdtls}" class="text-danger" ></errors> </div>
+							</div>
+						</div>
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="billAddr" class="control-label">Billing Address</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<textarea th:field="*{billAddr}" class="form-control" required="true" placeholder="Enter Billing Address "></textarea>
+							<div class="text-left"><span th:errors="*{billAddr}" class="text-danger" ></span>	</div>
+							</div>
+						</div>
+
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="shipAddr" class="control-label">Shipping Address</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<textarea th:field="*{shipAddr}" class="form-control" required="true" placeholder="Enter Shipping Address" ></textarea>
+							<div class="text-left"><span th:errors="*{shipAddr}" class="text-danger" ></span>	</div>
+							</div>
+						</div>
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="shipDesc" class="control-label">DESCRIPTION</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<textarea th:field="*{shipDesc}" class="form-control" required="true" placeholder="Enter Any Note" ></textarea>
+							<div class="text-left"><span th:errors="*{shipDesc}" class="text-danger" ></span> </div>
+							</div>
+						</div>
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+							
+							</div>
+							<div class="col-md-6 col-xs-12 text-left">
+								<button type="submit" class="btn btn-rounded btn-success btnbox" >Register &nbsp;<i class="fa fa-send"></i></button>
+							</div>
+							
+						</div>
+	
+				</form>
+			
+	</div>
+	<c:if test="${msg ne null }">
+	<div class="card-footer text-danger bg-success">
+		${msg} 
+		<c:if test="${shipId ne null }">
+			<a href="view?id=${shipId}"  class="btn btn-primary float-right" >View &nbsp;<i class="fa fa-eye"></i></a>
+		</c:if>
+	</div>
+
+</div> <!-- card ended -->
+
+<br><br>
+
+</main>
+
+<span th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</span>
+
+
+<script>
+
+	if ($(window).width() < 768) {
+		$('.card-body').removeClass('text-center');
+		$('.card').removeClass('box');
+		$('.card-header').removeClass('headerbox');
+	} else {
+		$('.card-body').addClass('text-center');
+	}
+
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#shipCode").change(function(){
+		$.ajax({
+			url:'check',
+			data:{'order':$("#shipCode").val()},
+			success:function(resp){
+				console.log('my message' + resp);
+				$("#msg").text(resp);
+				if(resp!='')
+					{
+						$("#shipCode").val("");
+						$("#shipCode").focus();
+					}
+			},
+			error: function(resp, err){ console.log('my message' + err.responseText); }
+		});
+		//console.log("resp"+resp)
+	});
+});
+</script>
+
+
+

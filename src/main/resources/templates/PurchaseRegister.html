@@ -1,0 +1,173 @@
+<span th:replace="~{shared/Menubar :: header}"></span>
+
+
+<main class="container mt-5">
+
+
+<div class="card border-primary box">
+
+	<div class="card-header headerbox" style="background: #50d8af !important">
+		<h2 class="text-center">Welcome to Purchase Register Page</h2>
+	</div>
+	<div class="card-body text-center">
+				
+			<form th:action="@{save}" method="POST" th:object="${purchase}" class="form form-horizontal">
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="orderCode" class="control-label">Order Code</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<input type="text" th:field="*{orderCode}" class="form-control" required="true" placeholder="Enter Order Code"/>
+								<div class="text-left">
+									<span th:errors=*{orderCode}" class="text-danger" ></span>
+									<span id="msg" class="text-danger text-left"></span>
+								</div>
+							</div>
+						</div>
+						
+					
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="shipmentCode.shipmentId" class="control-label">Shipment Code</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<select th:field="*{shipmentCode.shipmentId}" class="form-control" required="true"> 
+										<option value="">-Select Shipment Code-</option>
+										 <options items="${listshipment}" ></options>
+								</select>
+							<div class="text-left"><span th:errors=*{shipmentCode}" class="text-danger" ></span>	</div>
+							</div>
+						</div>
+						
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="vendor.whId" class="control-label">Vendor</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<select th:field="*{vendor.whId}" class="form-control" required="true">
+										<option value="">-Select Vendor-</option>
+										<options items="${listvendor}" ></options>
+								</select>
+							<div class="text-left"><span th:errors=*{vendor" class="text-danger" ></span>	</div>
+							</div>
+						</div>
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="refNum" class="control-label">Refrence Number</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<input type="text" th:field="*{refNum}" class="form-control num" required="true" placeholder="Enter Ref Number"/>
+								
+							<div class="text-left"><span th:errors=*{refNum}" class="text-danger" ></span> </div>
+							</div>
+						</div>
+
+
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12">
+								<label for="qualityCheck" class="control-label">Quality Check</label>
+							</div>
+							<div class="col-md-6 col-xs-12 text-left">
+								<div class="form-check-inline">
+									<label class="form-check-label" for="qualityCheck1"> 
+										<input type="radio" th:field="*{qualityCheck}" value="Required" class="form-check-input" />Required
+									</label>
+								</div>
+								<div class="form-check-inline">
+									<label class="form-check-label" for="qualityCheck2">
+										 <input type="radio" th:field="*{qualityCheck}" value="Not Required" class="form-check-input" />Not Required
+									</label>
+								</div>
+								<div class="text-left">
+									<span th:errors=*{qualityCheck}" class="text-danger" ></span>
+								</div>
+							</div>
+						</div>
+
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="status" class="control-label">Default Status</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<input type="text" th:field="*{status}" class="form-control num" required="true" value="OPEN" readonly="true"/>
+								<span class="errmsg text-danger"></span>
+							
+							<div class="text-left"><span th:errors=*{status}" class="text-danger" ></span> </div>
+							</div>
+						</div>
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="note" class="control-label">DESCRIPTION</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<textarea th:field="*{note}" class="form-control" required="true" placeholder="Enter Any Note" ></textarea>
+							<div class="text-left"><span th:errors=*{note}" class="text-danger" ></span>	</div>
+							</div>
+						</div>
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+							
+							</div>
+							<div class="col-md-6 col-xs-12 text-left">
+								<button type="submit" class="btn btn-rounded btn-success btnbox" >Place Order &nbsp;<i class="fa fa-send"></i></button>
+							</div>
+							
+						</div>
+	
+				</form>
+			
+	</div>
+	<div th:if="${msg != null}" class="card-footer text-danger bg-success">
+		<span th:text="${msg}"></span> 
+			<a th:if="${purId != null }"  th:href="@{view/{id}(id=${purId})}"  class="btn btn-primary float-right" >View &nbsp;<i class="fa fa-eye"></i></a>
+	</div>
+
+</div> <!-- card ended -->
+
+<br><br>
+
+</main>
+
+<span th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</span>
+
+
+<script>
+
+	if ($(window).width() < 768) {
+		$('.card-body').removeClass('text-center');
+		$('.card').removeClass('box');
+		$('.card-header').removeClass('headerbox');
+	} else {
+		$('.card-body').addClass('text-center');
+	}
+
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#orderCode").change(function(){
+		$.ajax({
+			url:'check',
+			data:{'order':$("#orderCode").val()},
+			success:function(resp){
+				console.log('my message' + resp);
+				$("#msg").text(resp);
+				if(resp!='')
+					{
+						$("#orderCode").val("");
+						$("#orderCode").focus();
+					}
+			},
+			error: function(resp, err){ console.log('my message' + err.responseText); }
+		});
+		//console.log("resp"+resp)
+	});
+});
+</script>

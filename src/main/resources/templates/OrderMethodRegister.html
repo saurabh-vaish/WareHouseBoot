@@ -1,0 +1,169 @@
+<span th:replace="~{shared/Menubar :: header}"></span>
+
+
+<main class="container mt-5">
+
+
+<div class="card border-primary box">
+
+	<div class="card-header headerbox" style="background: #50d8af !important">
+		<h2 class="text-center">Welcome to Order Method Register Page</h2>
+	</div>
+	<div class="card-body text-center">
+				
+			<form th:action="@{save}" method="POST" th:object="@{orderMethod}" class="form form-horizontal">
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12">
+								<label for="orderMode" class="control-label">Order Mode</label>
+							</div>
+							<div class="col-md-6 col-xs-12 text-left">
+								<div class="form-check-inline">
+									<label class="form-check-label" for="orderMode1"> 
+										<input type="radio" th:field=*{orderMode}" value="Sale" class="form-check-input"  required/>Sale
+									</label>
+								</div>
+								<div class="form-check-inline">
+									<label class="form-check-label" for="orderMode2">
+										<input type="radio" th:field=*{orderMode}" value="Purchase" class="form-check-input" required/>Purchase
+									</label>
+								</div>
+								<div class="text-left">
+									<span th:errors=*{orderMode}" class="text-danger" ></span>
+								</div>
+							</div>
+						</div>
+						
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="orderCode" class="control-label">Order Code</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<input th:field=*{orderCode}" class="form-control" required="true" placeholder="Enter Order Code"/>
+								<div class="text-left">
+									<span th:errors=*{orderCode" class="text-danger" ></span>
+									<span id="msg" class="text-danger"></span>
+								</div>
+							</div>
+						</div>
+						
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="exeType" class="control-label">Execute Type</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<select th:field=*{exeType}" class="form-control" required="true">
+										<option value="">-Select Type-</option>
+										<option value="FIFO">FIFO</option>
+										<option value="LIFO">LIFO</option>
+										<option value="FCFO">FCFO</option>
+										<option value="FEFO">FEFO</option>
+								</select>
+							<div class="text-left"><span th:errors=*{exeType}" class="text-danger" ></span>	</div>
+							</div>
+						</div>
+						
+					
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12">
+								<label for="orderAccpet" class="control-label">Order Accept</label>
+							</div>
+							<div class="col-md-6 col-xs-12 text-left">
+								<div class="form-check-inline">
+									<label class="form-check-label" for="orderAccpet1"> 
+										<input type="checkbox" th:field=*{orderAccpet}"  class="form-check-input" value="Multi-Model"/> Multi-Model
+									</label>
+								</div>
+								<div class="form-check-inline">
+									<label class="form-check-label" for="orderAccpet2">
+										<input type="checkbox" th:field=*{orderAccpet}" class="form-check-input" value="Accpet-Return"/> Accpet Return
+									</label>
+								</div>
+								<div class="form-check-inline">
+									<label class="form-check-label" for="orderAccpet3">
+										<input type="checkbox" th:field=*{orderAccpet}" class="form-check-input" value="Service Extend"/> Service Extend
+									</label>
+								</div>
+								<div class="text-left">
+									<span th:errors=*{orderAccpet}" class="text-danger" ></span>
+								</div>
+							</div>
+						</div>
+						
+						
+						
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+								<label for="orderNote" class="control-label">DESCRIPTION</label>
+							</div>
+							<div class="col-md-6 col-xs-12">
+								<textarea th:field=*{orderNote" class="form-control" required="true" placeholder="Enter Any Note" ></textarea>
+							<div class="text-left"><span th:errors=*{orderNote}" class="text-danger" ></span>	</div>
+							</div>
+						</div>
+						<br>
+						<div class="row form-group">
+							<div class="col-md-4 col-xs-12 ">
+							
+							</div>
+							<div class="col-md-6 col-xs-12 text-left">
+									<button type="submit" class="btn btn-success align-left btnbox" >Create Order Method &nbsp;<i class="fa fa-send"></i></button>
+							</div>
+							
+						</div>
+	
+				</form>
+			
+	</div>
+	<div th:if="${msg != null}" class="card-footer text-danger bg-success">
+		<span th:text="${msg}"></span> 
+			<a th:if="${orderId != null }" th:href="@{view/{id}(id=${orderId})}"  class="btn btn-primary float-right" >View &nbsp;<i class="fa fa-eye"></i></a>
+	</div>
+	
+</div> <!-- card ended -->
+
+<br><br>
+
+</main>
+
+<span th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</span>
+
+
+<script>
+
+	if ($(window).width() < 768) {
+		$('.card-body').removeClass('text-center');
+		$('.card').removeClass('box');
+		$('.card-header').removeClass('headerbox');
+	} else {
+		$('.card-body').addClass('text-center');
+	}
+
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#orderCode").change(function(){
+		$.ajax({
+			url:'check',
+			data:{'order':$("#orderCode").val()},
+			success:function(resp){
+				console.log('my message' + resp);
+				$("#msg").text(resp);
+				if(resp!='')
+					{
+						$("#orderCode").val("");
+						$("#orderCode").focus();
+					}
+			},
+			error: function(resp, err){ console.log('my message' + err.responseText); }
+		});
+		//console.log("resp"+resp)
+	});
+});
+</script>
+

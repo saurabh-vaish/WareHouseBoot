@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="header">
+
+<head>
+  <meta charset="utf-8">
+  <title>WareHouse</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="" name="keywords">
+  <meta content="" name="description">
+
+  <!-- Favicons -->
+  <link th:href="@{/images/icons/logo.png}" rel="icon">
+  <link th:href="@{img/apple-touch-icon.png}" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800" rel="stylesheet">
+
+  <!-- Bootstrap CSS File -->
+	<link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet">
+
+  <!-- Libraries CSS Files -->
+  <link th:href="@{/webjars/font-awesome/5.7.2/css/all.css}" rel="stylesheet">
+  <link th:href="@{/webjars/animate/3.5.2/animate.min.css}" rel="stylesheet">
+  <link th:href="@{/webjars/datatables.net-bs4/3.2.2/css/dataTables.bootstrap4.css}" rel="stylesheet">
+  <link th:href="@{/lib/venobox/venobox.css}" rel="stylesheet">
+  <link th:href="@{/webjars/owl.carousel/2.3.4/dist/assets/owl.carousel.min.css}" rel="stylesheet">
+
+  <!-- Main Stylesheet File -->
+  <link th:href="@{/css/style.css}" rel="stylesheet">
+
+
+  <!-- =======================================================
+   author : saurbh vaish
+  ======================================================= -->
+</head>
+
+<body th:with="activeUrl=${#httpServletRequest.getServletPath()}">
+
+  <!--==========================
+    Header
+  ============================-->
+  <header id="header" class="header-scrolled">
+    <div >
+      <nav id="nav-menu-container" class="navbar navbar-dark  navbar-expand-sm" >
+        <a href="#intro" class="scrollto">
+         	<img th:src="@{/images/icons/logo.png}" alt="" title="warehouse" class="navbar-brand active img shadow-lg ml-4 " style="max-width:45px;" />
+         </a>
+        <ul class="nav-menu ml-auto">
+         <!-- Uom -->
+			<li id="uom" th:classappend="${activeUrl == '/about' ? 'menu-active':''}"  >
+				<a href="#">Uom &nbsp; <i class="fa fa-caret-down"></i></a>
+	            <ul class="dropdownCls">
+	              <li><a th:href="@{/uom/register}">Register</a></li>
+	              <li><a th:href="@{/uom/all}">View All</a></li>
+	            </ul>
+	         </li>
+          
+          <!-- Order Method -->
+         <li  th:classappend="${activeUrl == '/about' ? 'menu-active':''}"  >
+          <a href="#">Order Method&nbsp; <i class="fa fa-caret-down"></i></a>
+            <ul class="dropdownCls">
+              <li><a th:href="@{/order/register}">Register</a></li>
+              <li><a th:href="@{/order/all}">View All</a></li>
+            </ul>
+          </li>
+         
+          <!-- Shipment Type -->
+       <li  th:classappend="${activeUrl == '/about' ? 'menu-active':''}"  >
+		<a href="#">Shipment Type &nbsp; <i class="fa fa-caret-down"></i></a>
+            <ul class="dropdownCls">
+              <li><a th:href="@{/shipment/register}">Register</a></li>
+              <li><a th:href="@{/shipment/all}">View All</a></li>
+            </ul>
+          </li>
+          
+           <!-- WhUser-->
+       <li  th:classappend="${activeUrl == '/about' ? 'menu-active':''}"  >
+		<a href="#">WhUser &nbsp; <i class="fa fa-caret-down"></i></a>
+            <ul class="dropdownCls">
+              <li><a th:href="@{/wh/register}">Register</a></li>
+              <li><a th:href="@{/wh/all}">View All</a></li>
+            </ul>
+          </li>
+          
+          <!-- Item -->
+      	<li  th:classappend="${activeUrl == '/about' ? 'menu-active':''}"  >
+          <a href="#">Item &nbsp; <i class="fa fa-caret-down"></i></a>
+            <ul class="dropdownCls">
+              <li><a th:href="@{/item/register}">Register</a></li>
+              <li><a th:href="@{/item/all}">View All</a></li>
+            </ul>
+          </li>
+         
+         <!-- Purchase -->
+        <li  th:classappend="${activeUrl == '/about' ? 'menu-active':''}"  >
+          <a href="#">Purchase &nbsp; <i class="fa fa-caret-down"></i></a>
+            <ul class="dropdownCls">
+              <li><a th:href="@{/purchase/register}">Register</a></li>
+              <li><a th:href="@{/purchase/all}">View All</a></li>
+            </ul>
+          </li>
+          
+           <!-- Sale Order -->
+         <li  th:classappend="${activeUrl == '/about' ? 'menu-active':''}"  >
+          <a href="#">Sale Order &nbsp; <i class="fa fa-caret-down"></i></a>
+            <ul class="dropdownCls">
+              <li><a th:href="@{/sale/	register}">Register</a></li>
+              <li><a th:href="@{/sale/all}">View All</a></li>
+            </ul>
+          </li>
+         
+         
+      		    <!-- Grn -->
+       <li  th:classappend="${activeUrl == '/about' ? 'menu-active':''}"  >
+          <a href="#">GRN &nbsp; <i class="fa fa-caret-down"></i></a>
+            <ul class="dropdownCls">
+              <li><a th:href="@{/grn/register}">Register</a></li>
+              <li><a th:href="@{/grn/view}">View All</a></li>
+            </ul>
+          </li>
+          
+          <!-- Shipping -->
+        <li  th:classappend="${activeUrl == '/about' ? 'menu-active':''}"  >
+          <a href="#">Shipping &nbsp; <i class="fa fa-caret-down"></i></a>
+            <ul class="dropdownCls">
+              <li><a th:href="@{/shipping/register}">Register</a></li>
+              <li><a th:href="@{/shipping/view}">View All</a></li>
+            </ul>
+          </li>
+          
+      	 <!-- User -->
+        <li  th:classappend="${activeUrl == '/about' ? 'menu-active':''}"  >
+          <a href="#">User &nbsp; <i class="fa fa-caret-down"></i></a>
+            <ul class="dropdownCls">
+            
+              <li><a th:href="@{/userr/all}">View All</a></li>
+            </ul>
+          </li>
+          
+      	 <li id="setting" ><a href=""><i class="fa fa-cog fa-2x fa-fw" id="icon" ></i></a>
+	      	 <ul class="dropdownCls" style="left:-140px;">
+	              <li><a th:href="@{/userr/change}">Change Password</a></li>
+	              <li><a th:href="@{/logout}">Logout</a></li>
+	          </ul>
+      	 </li>
+      
+      
+         
+        </ul>
+      </nav><!-- #nav-menu-container -->
+    </div>
+  </header><!-- #header -->
+
+<br>
+
+<!-- mobile nav-->
+ 
+  <nav id="mobile-nav">	 
+    <ul class="nav-menu sf-js-enabled sf-arrows" style="touch-action: pan-y;">
+        <li>
+        <a href="#" class="sf-with-ul">Uom &nbsp; <i class="fa fa-caret-down"></i></a>
+        <ul class="dropdownCls" >
+          <li><a th:href="@{/uom/register}">Register</a></li>
+          <li><a th:href="@{/uom/all}">View All</a></li>
+        </ul>
+      </li>
+	  	<br><br>
+      <li>
+      <a href="#" class="sf-with-ul">Order Method &nbsp; <i class="fa fa-caret-down"></i></a>
+        <ul class="dropdownCls" >
+          <li><a th:href="@{/order/register}">Register</a></li>
+          <li><a th:href="@{/order/all}">View All</a></li>
+        </ul>
+      </li>
+	  <br><br>
+      <li>
+    <a href="#" class="sf-with-ul">Shipment Type &nbsp; <i class="fa fa-caret-down"></i></a>
+        <ul class="dropdownCls" >
+          <li><a th:href="@{/shipment/register}">Register</a></li>
+          <li><a th:href="@{/shipment/all}">View All</a></li>
+        </ul>
+      </li>
+      <br><br>
+    <li>
+    <a href="#" class="sf-with-ul">WhUser &nbsp; <i class="fa fa-caret-down"></i></a>
+        <ul class="dropdownCls" >
+          <li><a th:href="@{/wh/register}">Register</a></li>
+          <li><a th:href="@{/wh/all}">View All</a></li>
+        </ul>
+      </li>
+	  <br><br>
+      <li>
+      <a href="#" class="sf-with-ul">Item &nbsp; <i class="fa fa-caret-down"></i></a>
+        <ul class="dropdownCls" >
+          <li><a th:href="@{/item/register}">Register</a></li>
+          <li><a th:href="@{/item/all}">View All</a></li>
+        </ul>
+      </li>
+	  <br><br>
+      <li>
+      <a href="#" class="sf-with-ul">Purchase &nbsp; <i class="fa fa-caret-down"></i></a>
+        <ul class="dropdownCls" >
+          <li><a th:href="@{/purchase/register}">Register</a></li>
+          <li><a th:href="@{/purchase/all}">View All</a></li>
+        </ul>
+      </li>
+      <br><br>
+      <li>
+      <a href="#" class="sf-with-ul">Sale Order &nbsp; <i class="fa fa-caret-down"></i></a>
+        <ul class="dropdownCls" >
+          <li><a th:href="@{/sale/register}">Register</a></li>
+          <li><a th:href="@{/sale/all}">View All</a></li>
+        </ul>
+      </li>
+      <br><br>
+      <li>
+      <a href="#" class="sf-with-ul">GRN &nbsp; <i class="fa fa-caret-down"></i></a>
+        <ul class="dropdownCls" >
+          <li><a th:href="@{/grn/register}">Register</a></li>
+          <li><a th:href="@{/grn/view}">View All</a></li>
+        </ul>
+      </li>
+      <br><br>
+      <li>    
+      <a href="#" class="sf-with-ul">Shipping &nbsp; <i class="fa fa-caret-down"></i></a>
+        <ul class="dropdownCls" >
+          <li><a th:href="@{/shipping/register}">Register</a></li>
+          <li><a th:href="@{/shipping/view}">View All</a></li>
+        </ul>
+      </li>
+	  <br><br>
+      <li>
+      <a href="#" class="sf-with-ul">User &nbsp; <i class="fa fa-caret-down"></i></a>
+        <ul class="dropdownCls" >
+          <li><a th:href="@{/userr/register}">Register</a></li>
+          <li><a th:href="@{/userr/all}">View All</a></li>
+        </ul>
+      </li>
+	  <br><br>
+      <li id="setting"><a href="" class="sf-with-ul"><i class="fa fa-cog fa-2x fa-fw" id="icon"></i></a>
+           <ul class="dropdownCls" >
+              <li><a th:href="@{/userr/change}">Change Password</a></li>
+              <li><a th:href="@{/logout}">Logout</a></li>
+          </ul>
+       </li>
+    </ul>
+
+	<br><br><br><br>
+  </nav>
+

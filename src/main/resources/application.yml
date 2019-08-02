@@ -1,0 +1,11 @@
+spring:
+  profiles:
+    active:
+    - dev
+    include:
+    - appMsg
+server:
+  servlet:
+    context-path: /warehouse
+  port: 7070
+## spring security

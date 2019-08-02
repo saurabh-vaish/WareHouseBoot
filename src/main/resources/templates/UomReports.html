@@ -1,0 +1,49 @@
+<span th:replace="~{shared/Menubar :: header}"></span>
+
+<main class="container mt-5">
+
+
+
+<div class="card border-info box">
+
+	<div class="card-header headerbox " style="background: #50d8af !important">
+		<h2 class="text-center">Welcome to Uom Reports</h2>
+	</div>
+	<div class="card-body text-center">
+	
+		<div class="row">
+			<div class="col-md-6 col-xs-12 ">
+				<img th:src="@{/images/uomTypePie.jpg}" class="img-fluid img-thumbnail btnbox" />
+			</div>
+			<div class="clearfix"></div>
+			<div class="col-md-6 col-xs-12">
+				<img th:src="@{/images/uomTypeBar.jpg}"  class="img-fluid img-thumbnail btnbox" />
+			</div>
+		</div>
+		
+		<br />
+	</div>
+
+</div>
+<!-- card ended --> <br>
+<br>
+
+</main>
+
+<span th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</span>
+
+
+
+<script>
+
+	if ($(window).width() < 768) {
+		$('.card-body').removeClass('text-center');
+		$('.card').removeClass('box');
+		$('.card-header').removeClass('headerbox');
+	} else {
+		$('.card-body').addClass('text-center');
+	}
+
+</script>
+
