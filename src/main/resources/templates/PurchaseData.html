@@ -1,6 +1,6 @@
 <span th:replace="~{shared/Menubar :: header}"></span>
 
-<main class="container mt-5">
+<main class="container mt-3">
 
 
 
@@ -46,28 +46,31 @@ th{
 						<td>
 							<th:block th:switch="${obj.status}">
 								<div th:case="'ORDERED'">
-									<a href="updateOrderStatus?orderId=${obj.purId}&status=INVOICED" class="btn btn-success"><b>INVOICE</b></a>
+									<a th:href="@{updateOrderStatus(orderId=${obj.purId},status=INVOICED)}" class="btn btn-success"><b>INVOICE</b></a>
 								</div>
 								<div th:case="'CANCELLED'">
 									<b class="text-danger">ORDERE CANCELLED</b>
 								</div>
 								<div th:case="'INVOICED'">
-									<a href="viewInvoice?orderId=${obj.purId}" class="text-dark"><b>SHOW VENDOR INVOICE</b></a>
+									<a th:href="@{viewInvoice(orderId=${obj.purId})}" class="text-dark"><b>SHOW VENDOR INVOICE</b></a>
 								</div>
-								<div th:case="('OPEN' || 'PICKING')">
+								<div th:case="'OPEN'">
+									<b>TO BE CONFIRMED </b>
+								</div>
+								<div th:case="'PICKING'">
 									<b>TO BE CONFIRMED </b>
 								</div>
 							</th:block>
 						</td>
 						<td>
 							<span th:if="${obj.status == 'OPEN' || obj.status == 'PICKING' || obj.status == 'ORDERED'}">
-								<a th:href="@{updateOrderStatus?orderId=${obj.purId}&status=CANCELLED}" class="btn btn-danger">CANCEL</a>
+								<a th:href="@{updateOrderStatus(orderId=${obj.purId},status='CANCELLED')}" class="btn btn-danger">CANCEL</a>
 							</span>
 							<span th:if="${obj.status != 'OPEN' && obj.status != 'PICKING' && obj.status != 'ORDERED'}"> 
 								<a  class="btn btn-danger disabled" >CANCEL</a>
 							</span>
 						</td>
-						<td><a th:href="@{viewItems?orderId=${obj.purId}}" class="text-dark"><b>
+						<td><a th:href="@{viewItems?orderId={orderId}(orderId=${obj.purId})}" class="text-dark"><b>
 							<span th:if="${obj.status == 'OPEN' || obj.status == 'CANCELED'}">
 								<i class="fa fa-cart-plus fa-3x"></i>
 							</span>
@@ -76,19 +79,19 @@ th{
 							</span>
 						</b> </a></td> 									
 						<td><a th:href="@{view/{id}(id=${obj.purId})}" class="btn btn-success">View&nbsp;<i class="fa fa-eye"></i> </a></td>
-						<td><a class="btn btn-primary" th:href="@{excel/{id}(id=${obj.purId})}">Excel &nbsp;<i class="fa fa-file-excel-o"></i></a></td>
-						<td><a class="btn btn-info"  th:href="@{pdf/{id}(id=${obj.purId})}">Pdf &nbsp;<i class="fa fa-file-pdf-o"></i></a></td>
+						<td><a class="btn btn-primary" th:href="@{excel?id={id}(id=${obj.purId})}">Excel &nbsp;<i class="fa fa-file-excel-o"></i></a></td>
+						<td><a class="btn btn-info"  th:href="@{pdf?id={id}(id=${obj.purId})}">Pdf &nbsp;<i class="fa fa-file-pdf-o"></i></a></td>
 						
 					</tr>
 					
 				<tr class="thead-dark ">
 					<th><button class="btn btn-info">Reports </button></th>
 					<th colspan=5>
-						<a href="excel" >
+						<a th:href="@{excel}" >
 						<img th:src="@{/images/icons/BulkExcel.png}" class="img img-responsive img-rounded" width="70" height="50" title="Export Data to Excel"/ ></a>
 					</th>
 					<th colspan=6>
-		<a href="pdf" ><img th:src="@{/images/icons/BulkPdf.png}" width="70" height="50" title="Export Data to pdf"/ >  </a>
+		<a th:href="@{pdf}" ><img th:src="@{/images/icons/BulkPdf.png}" width="70" height="50" title="Export Data to pdf"/ >  </a>
 					</th>
 					
 				</tr>
@@ -108,8 +111,8 @@ th{
 
 </main>
 
-<span th:include="~{shared/Footer :: footer (~{::body},'home')}">
-</span>
+<th:block th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</th:block>
 
 
 

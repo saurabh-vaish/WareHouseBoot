@@ -22,7 +22,7 @@ public class PurchaseExcelView extends AbstractXlsxView{
 		response.setHeader("Content-Disposition", "attachment;filename=Purchases.xls");
 
 		
-		List<Purchase> purchase=(List<Purchase>) model.get("purchase");
+		List<Purchase> purchase=(List<Purchase>) model.get("list");
 	
 		Sheet sheet=workbook.createSheet("Purchases");
 		

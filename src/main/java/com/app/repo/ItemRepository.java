@@ -10,11 +10,7 @@ import com.app.model.Item;
 public interface ItemRepository extends JpaRepository<Item, Integer>{
 
 	@Query("select i.itemId,i.itemCode from com.app.model.Item as i")
-	public List<ViewB> findByItemIdAndItemCode();
+	public List<Object[]> findByItemIdAndItemCode();
 	
-	interface ViewB
-	{
-		Integer getItemId();
-		String getItemCode();
-	}
+	
 }

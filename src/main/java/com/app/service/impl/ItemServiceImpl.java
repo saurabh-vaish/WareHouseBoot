@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.app.model.Item;
 import com.app.repo.ItemRepository;
-import com.app.repo.ItemRepository.ViewB;
 import com.app.service.IItemService;
 
 @Service
@@ -52,11 +51,11 @@ public class ItemServiceImpl implements IItemService {
 	
 	@Override
 	public Map<Integer, String> getItemIdNameCode() {
-		List<ViewB> list = repo.findByItemIdAndItemCode();
+		List<Object[]> list = repo.findByItemIdAndItemCode();
 		
 		return list.stream()
 						.collect(
-								Collectors.toMap(ViewB::getItemId,ViewB::getItemCode)
+								Collectors.toMap(ob->(Integer)ob[0],ob->(String)ob[1])
 						);
 	}
 	

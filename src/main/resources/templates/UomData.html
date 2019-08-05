@@ -1,7 +1,7 @@
 <span th:replace="~{shared/Menubar :: header}"></span>
 
 
-<main class="container mt-5">
+<main class="container mt-3">
 
 
 <style>
@@ -40,11 +40,11 @@ table.table-hover tbody tr:hover {
 				</tr>
 					<tr th:each="obj:${list}" class="text-center">
 						<td th:text="${obj.id}" ></td>
-						<td th:text=="${obj.uomType}" ></td>
+						<td th:text="${obj.uomType}" ></td>
 						<td th:text="${obj.uomCode}" ></td>
 						<td><a th:href="@{view/{id}(id=${obj.id})}" class="btn btn-success">View&nbsp;<i class="fa fa-eye"></i> </a></td>
-						<td><a class="btn btn-primary" th:href="@{excel/{id}(id=${obj.id})}">Excel &nbsp;<i class="fa fa-file-excel-o"></i></a></td>
-						<td><a class="btn btn-info"  th:href="@{pdf/{id}(id=${obj.id})}">Pdf &nbsp;<i class="fa fa-file-pdf-o"></i></a></td>
+						<td><a class="btn btn-primary" th:href="@{excel?id={id}(id=${obj.id})}">Excel &nbsp;<i class="fa fa-file-excel-o"></i></a></td>
+						<td><a class="btn btn-info"  th:href="@{pdf?id={id}(id=${obj.id})}">Pdf &nbsp;<i class="fa fa-file-pdf-o"></i></a></td>
 						
 					</tr>
 					
@@ -55,10 +55,10 @@ table.table-hover tbody tr:hover {
 						<img th:src="@{/images/icons/BulkExcel.png}" class="img img-responsive img-rounded" width="70" height="50" title="Export Data to Excel"/ ></a>
 					</th>
 					<th colspan=2>
-		<a href="pdf" ><img  th:src="@{/images/icons/BulkPdf.png}" width="70" height="50" title="Export Data to pdf"/ >  </a>
+		<a href="pdf" ><img  th:src="@{/images/icons/BulkPdf.png}" width="70" height="50" title="Export Data to pdf" />  </a>
 					</th>
 					<th colspan="5">
-		<a href="chart" > <img th:src="@{/images/icons/charts.png}" width="70" height="50" title="Export Data to Excel"/ > </a>
+		<a href="chart" > <img th:src="@{/images/icons/charts.png}" width="70" height="50" title="Export Data to Excel" /> </a>
 					</th>
 				</tr>
 			</table>
@@ -68,7 +68,6 @@ table.table-hover tbody tr:hover {
 		<div th:if="${msg != null}" class="card-footer " style="background: #50d8af !important">
 			<span th:text="${msg}"></span>
 		</div>
-	</c:if>
 
 </div> <!-- card ended -->
 
@@ -78,8 +77,8 @@ table.table-hover tbody tr:hover {
 
 </main>
 
-<span th:include="~{shared/Footer :: footer (~{::body},'home')}">
-</span>
+<th:block th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</th:blocks>
 
 
 

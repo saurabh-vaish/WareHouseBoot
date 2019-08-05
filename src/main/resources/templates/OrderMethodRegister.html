@@ -1,7 +1,21 @@
 <span th:replace="~{shared/Menubar :: header}"></span>
 
 
-<main class="container mt-5">
+<main class="container mt-3">
+
+<div th:if="${msg}" class=" flex-row-reverse ">
+	    <div class="alert alert-success p-2" role="alert">
+	        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <strong  th:text="${msg}"></strong> 
+	    </div>
+ </div>
+<div th:if="${emsg}" class=" flex-row-reverse">
+	    <div class="alert alert-danger p-2" role="alert">
+	        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <strong  th:text="${emsg}" ></strong> 
+	    </div>
+</div>
+
 
 
 <div class="card border-primary box">
@@ -11,38 +25,40 @@
 	</div>
 	<div class="card-body text-center">
 				
-			<form th:action="@{save}" method="POST" th:object="@{orderMethod}" class="form form-horizontal">
-						
-						<div class="row form-group">
+			<form th:action="@{save}" method="POST" th:object="${orderMethod}" class="form form-horizontal">
+					
+					
+					
+					 <div class="row form-group">
 							<div class="col-md-4 col-xs-12">
 								<label for="orderMode" class="control-label">Order Mode</label>
 							</div>
 							<div class="col-md-6 col-xs-12 text-left">
 								<div class="form-check-inline">
-									<label class="form-check-label" for="orderMode1"> 
-										<input type="radio" th:field=*{orderMode}" value="Sale" class="form-check-input"  required/>Sale
+									<label class="form-check-label" for="orderMode"> 
+										<input type="radio" th:field="*{orderMode}" value="Sale" class="form-check-input"  />Sale
 									</label>
 								</div>
 								<div class="form-check-inline">
-									<label class="form-check-label" for="orderMode2">
-										<input type="radio" th:field=*{orderMode}" value="Purchase" class="form-check-input" required/>Purchase
+									<label class="form-check-label" for="orderMode">
+										<input type="radio" th:field="*{orderMode}" value="Purchase" class="form-check-input" />Purchase
 									</label>
 								</div>
 								<div class="text-left">
-									<span th:errors=*{orderMode}" class="text-danger" ></span>
+									<span th:errors="*{orderMode}" class="text-danger" ></span>
 								</div>
 							</div>
-						</div>
+						</div> 
 						
-						
+				 	
 						<div class="row form-group">
 							<div class="col-md-4 col-xs-12 ">
 								<label for="orderCode" class="control-label">Order Code</label>
 							</div>
 							<div class="col-md-6 col-xs-12">
-								<input th:field=*{orderCode}" class="form-control" required="true" placeholder="Enter Order Code"/>
+								<input th:field="*{orderCode}" class="form-control" required="true" placeholder="Enter Order Code"/>
 								<div class="text-left">
-									<span th:errors=*{orderCode" class="text-danger" ></span>
+									<span th:errors="*{orderCode}" class="text-danger" ></span>
 									<span id="msg" class="text-danger"></span>
 								</div>
 							</div>
@@ -54,14 +70,14 @@
 								<label for="exeType" class="control-label">Execute Type</label>
 							</div>
 							<div class="col-md-6 col-xs-12">
-								<select th:field=*{exeType}" class="form-control" required="true">
+								<select th:field="*{exeType}" class="form-control" required="true">
 										<option value="">-Select Type-</option>
 										<option value="FIFO">FIFO</option>
 										<option value="LIFO">LIFO</option>
 										<option value="FCFO">FCFO</option>
 										<option value="FEFO">FEFO</option>
 								</select>
-							<div class="text-left"><span th:errors=*{exeType}" class="text-danger" ></span>	</div>
+							<div class="text-left"><span th:errors="*{exeType}" class="text-danger" ></span>	</div>
 							</div>
 						</div>
 						
@@ -73,21 +89,21 @@
 							<div class="col-md-6 col-xs-12 text-left">
 								<div class="form-check-inline">
 									<label class="form-check-label" for="orderAccpet1"> 
-										<input type="checkbox" th:field=*{orderAccpet}"  class="form-check-input" value="Multi-Model"/> Multi-Model
+										<input type="checkbox" th:field="*{orderAccpet}"  class="form-check-input" value="Multi-Model"/> Multi-Model
 									</label>
 								</div>
 								<div class="form-check-inline">
 									<label class="form-check-label" for="orderAccpet2">
-										<input type="checkbox" th:field=*{orderAccpet}" class="form-check-input" value="Accpet-Return"/> Accpet Return
+										<input type="checkbox" th:field="*{orderAccpet}" class="form-check-input" value="Accpet-Return"/> Accpet Return
 									</label>
 								</div>
 								<div class="form-check-inline">
 									<label class="form-check-label" for="orderAccpet3">
-										<input type="checkbox" th:field=*{orderAccpet}" class="form-check-input" value="Service Extend"/> Service Extend
+										<input type="checkbox" th:field="*{orderAccpet}" class="form-check-input" value="Service Extend"/> Service Extend
 									</label>
 								</div>
 								<div class="text-left">
-									<span th:errors=*{orderAccpet}" class="text-danger" ></span>
+									<span th:errors="*{orderAccpet}" class="text-danger" ></span>
 								</div>
 							</div>
 						</div>
@@ -99,8 +115,8 @@
 								<label for="orderNote" class="control-label">DESCRIPTION</label>
 							</div>
 							<div class="col-md-6 col-xs-12">
-								<textarea th:field=*{orderNote" class="form-control" required="true" placeholder="Enter Any Note" ></textarea>
-							<div class="text-left"><span th:errors=*{orderNote}" class="text-danger" ></span>	</div>
+								<textarea th:field="*{orderNote}" class="form-control" required="true" placeholder="Enter Any Note" ></textarea>
+							<div class="text-left"><span th:errors="*{orderNote}" class="text-danger" ></span>	</div>
 							</div>
 						</div>
 						<br>
@@ -112,7 +128,7 @@
 									<button type="submit" class="btn btn-success align-left btnbox" >Create Order Method &nbsp;<i class="fa fa-send"></i></button>
 							</div>
 							
-						</div>
+						</div> 
 	
 				</form>
 			
@@ -128,8 +144,8 @@
 
 </main>
 
-<span th:include="~{shared/Footer :: footer (~{::body},'home')}">
-</span>
+<th:block th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</th:block>
 
 
 <script>

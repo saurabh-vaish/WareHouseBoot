@@ -44,7 +44,7 @@ public class Purchase {
 	private String qualityCheck;
 	
 	@Column(name="status")
-	private String status;
+	private String status="OPEN";
 	
 	@Column(name="note")
 	private String note;

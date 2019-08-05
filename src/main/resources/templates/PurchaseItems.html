@@ -1,6 +1,6 @@
 <span th:replace="~{shared/Menubar :: header}"></span>
 
-<main class="container mt-5">
+<main class="container mt-3">
 
 <div class="card border-primary box">
 
@@ -33,7 +33,7 @@
 					<div class="col-3">
 						<select th:field="*{itemDtl.itemId}" class="form-control"  required="true">
 									<option value="">--SELECT--</option>
-									<options items="${itemsMap}" />
+									<option th:each="map:${itemsMap}"  th:text="${map.value}" th:value="${map.key}" ></option>
 						</select>
 					</div>
 					
@@ -41,7 +41,7 @@
 					<div class="col-3"><input type="text" th:field="*{itemsQty}" class="form-control" required="true" placeholder="Enter Quantity"/></div>
 					<div class="col-2"><input type="submit" value="ADD ITEM" class="btn btn-success"></div>
 				
-				<input type="hidden" th:field="*{poHdrId}" />
+				<input type="text" th:field="*{poHdrId}" hidden />
 			</div>
 									
 			</form>	
@@ -59,21 +59,23 @@
 							<th>QTY</th>
 							<th>LINE TOTAL</th>
 						</tr>
-						<tr th:if="poDtl:${dtls}">
+						<tr th:each="poDtl:${dtls}">
 								<td th:text="${poDtl.slno}" ></td>
 								<td th:text="${poDtl.itemDtl.itemCode}" ></td>
 								<td th:text="${poDtl.itemDtl.baseCost}" ></td>
 								<td th:text="${poDtl.itemsQty}" ></td>
-								<td th:text="${poDtl.itemDtl.baseCost * poDtl.itemsQty}" ></td>
+								<td th:text="${poDtl.itemDtl.baseCost}" ></td>
+								<td th:text="${poDtl.itemsQty*1.0}" ></td>
+								
 								<th:block th:if="${poStatus =='PICKING' }">
-									<td><a th:href="@{removeItem?orderDtlId=${poDtl.orderDtlId}&orderId=${poDtl.poHdrId}}"
+									<td><a th:href="@{removeItem(orderDtlId=${poDtl.orderDtlId},orderId=${poDtl.poHdrId})}"
 										class="btn btn-danger btnbox">DELETE</a></td>
 								</th:block>
 							</tr>
 						<tr>
 							<th:block th:if="${poStatus =='PICKING' }">
 								<td colspan="5" align="center">
-								<a th:href="@{updateOrderStatus?orderId=${poId}&status=ORDERED}"
+								<a th:href="@{updateOrderStatus(orderId=${poId},status='ORDERED')}"
 									class="btn btn-success btnbox">CONFIRM ORDER</a></td>
 							</th:block>
 						</tr>
@@ -87,8 +89,8 @@
 			
 </main>
 
-<span th:include="~{shared/Footer :: footer (~{::body},'home')}">
-</span>
+<th:block th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</th:block>
 
 
 <script>

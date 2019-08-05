@@ -12,10 +12,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.app.model.OrderMethod;
 import com.app.service.IOrderMethodService;
@@ -24,9 +26,13 @@ import com.app.validator.OrderMethodValidator;
 import com.app.view.OrderMethodExcelView;
 import com.app.view.OrderMethodPdfView;
 
+import lombok.extern.log4j.Log4j2;
+
+
 
 @Controller
 @RequestMapping("/order")
+@Log4j2
 public class OrderMethodController {
 
 	@Autowired
@@ -69,30 +75,35 @@ public class OrderMethodController {
 					  break;
 				  }
 			  }
-			 System.out.println(msg);
+			 
+			  log.info(msg);
 			  return msg;
 		}	
 	
 
 	// save order method
 	@RequestMapping(value="/save",method=POST)
-	public String saveOrderMethod(@ModelAttribute OrderMethod orderMethod,Errors errors,ModelMap map)
+	public String saveOrderMethod(@ModelAttribute OrderMethod orderMethod,Errors errors,ModelMap map,RedirectAttributes attr)
 	{
 		validator.validate(orderMethod, errors);
 		
 		if(!errors.hasErrors())  // no errors
 		{
 			Integer id = service.saveOrderMethod(orderMethod);
-			map.addAttribute("msg"," Order Method '"+id+"' registered successfully" );  // save data and msg sending to ui
-			map.addAttribute("orderId",id );  // save data and id sending to ui
+			attr.addFlashAttribute("msg"," Order Method '"+id+"' registered successfully" );  // save data and msg sending to ui
+			attr.addFlashAttribute("orderId",id );  // save data and id sending to ui
 			
-			map.addAttribute("orderMethod",new OrderMethod()); // clear form backing object
+			log.info("OrderMethod Registred Successfully !");
+			return "redirect:register";
 		}
 		else
 		{
-			map.addAttribute("msg", "enter valid details");
+			map.addAttribute("emsg", "enter valid details");
+
+			log.info("Failed to Register OrderMethod ! ");
+
+			return "OrderMethodRegister";
 		}
-		return "OrderMethodRegister";
 	}
 
 
@@ -105,23 +116,26 @@ public class OrderMethodController {
 		return "OrderMethodData";				
 	}
 
+	
 	// show one record
-	@RequestMapping("/view")
-	public String showOneRecord(@RequestParam Integer id,ModelMap map)
+	@RequestMapping("/view/{id}")
+	public String showOneRecord(@PathVariable Integer id,ModelMap map)
 	{
 		map.addAttribute("order",service.getOrderMethodById(id));
 		return "OrderMethodView";
 	}
 	
 	
+	
 	//delete record
-	@RequestMapping("/delete")
-	public String deleteOrder(@RequestParam("id")Integer id,ModelMap map)
+	@RequestMapping("/delete/{id}")
+	public String deleteOrder(@PathVariable Integer id,RedirectAttributes map)
 	{
 		service.deleteOrderMethod(id);
-		map.addAttribute("list", service.getAllOrderMethods());
-		map.addAttribute("msg", "Order id '"+id+"' deleted successfully ");
-		return "OrderMethodData";
+		map.addFlashAttribute("msg", "Order id '"+id+"' deleted successfully ");
+		
+		log.info("order method deleted successfully !");
+		return "redirect:all";
 	}
 
 
@@ -132,16 +146,19 @@ public class OrderMethodController {
 		
 				validator.validate(order, errors);
 				
-				  System.out.println(order);
 				  
 				  if(!errors.hasErrors()) 
 				  {
 					  //call service
 					  service.updateOrderMethod(order);
 					  map.addAttribute("msg","Order Method '"+order.getOrderId()+"' updated successfully ");
+					  
+					  log.info("order method updated successfully !");
 				  }
 				  else {
-					  map.addAttribute("msg","Enter Valid Details");
+					  map.addAttribute("emsg","Enter Valid Details");
+
+					  log.info("failed to update order method !");
 				}
 				 
 				
@@ -170,6 +187,7 @@ public class OrderMethodController {
 			m.addObject("list",Collections.singletonList(service.getOrderMethodById(id)));
 		}
 
+		log.info("Excel report generated");
 		return m;
 	}
 
@@ -194,6 +212,7 @@ public class OrderMethodController {
 			m.addObject("list",Collections.singletonList(service.getOrderMethodById(id)));
 		}
 
+		log.info("pdf report generated");
 		return m;
 	}
 
@@ -207,6 +226,8 @@ public class OrderMethodController {
 		
 		util.ganeratePie(path, data);
 		util.ganerateBar(path, data);
+
+		log.info("charts generated");
 		return "orderMethodReports";
 	}
 

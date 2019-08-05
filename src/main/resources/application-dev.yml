@@ -31,9 +31,12 @@ spring:
             enable: true  servlet:    multipart:      max-file-size: 10MB
 ## logging
 logging:
-  file: warehouse.log
   level:
     root: INFO
     com.app: DEBUG
+  file: 
+    max-size: 5MB
+    max-history: 5
+  
 ## file size
         

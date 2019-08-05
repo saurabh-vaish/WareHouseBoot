@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.app.model.WhUser;
 import com.app.repo.WhUserRepository;
-import com.app.repo.WhUserRepository.ViewG;
 import com.app.service.IWhUserService;
 
 @Service
@@ -59,8 +58,12 @@ public class WhUserServiceImpl implements IWhUserService {
 	@Transactional(readOnly=true)
 	public Map<Integer, String> getAllWhUserByType(String userType)
 	{
-		List<ViewG> list = repo.findAllWhUserByType(userType);
-		return list.stream().collect(Collectors.toMap(ViewG::getWhId,ViewG::getWhCode));
+		List<Object[]> list = repo.findAllWhUserByType(userType);
+		
+		return list.stream().collect(Collectors.toMap(
+							ob->(Integer)ob[0],				// key	-- id	
+							ob->(String)ob[1])				// value --  Code
+				);
 	}
 
 	

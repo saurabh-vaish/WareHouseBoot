@@ -9,11 +9,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.app.model.Purchase;
 import com.app.model.PurchaseDtl;
@@ -22,10 +24,16 @@ import com.app.service.IPurchaseService;
 import com.app.service.IShipmentTypeService;
 import com.app.service.IWhUserService;
 import com.app.validator.PurchaseValidator;
+import com.app.view.PurchaseExcelView;
+import com.app.view.PurchasePdfView;
 import com.app.view.VendorInvoicePdfView;
+
+import lombok.extern.log4j.Log4j2;
+
 
 @Controller
 @RequestMapping("/purchase")
+@Log4j2
 public class PurchaseController {
 
 	@Autowired
@@ -43,6 +51,7 @@ public class PurchaseController {
 	@Autowired
 	private IItemService itemService;
 
+	
 	//1. register page
 	@RequestMapping("/register")
 	public  String showRegister(ModelMap map)
@@ -75,14 +84,14 @@ public class PurchaseController {
 			  }
 		  }
 		 
-		  System.out.println(msg);
+		  log.info(msg);
 		  return msg;
 
 	}
 
 	// 2. save 
 	@RequestMapping("/save")
-	public String savePurchase(@ModelAttribute Purchase purchase,Errors errors,ModelMap map)
+	public String savePurchase(@ModelAttribute Purchase purchase,Errors errors,ModelMap map,RedirectAttributes attr)
 	{
 		
 		validator.validate(purchase, errors);
@@ -90,21 +99,23 @@ public class PurchaseController {
 		if(!errors.hasErrors()) // no error
 		{
 			Integer id = service.savePurchase(purchase); 
-			map.addAttribute("msg","purchase '"+id+"' saved successfully");
-			map.addAttribute("purId",id);
-			map.addAttribute("purchase",new Purchase()); // form backing object
+			attr.addFlashAttribute("msg","purchase '"+id+"' saved successfully");
+			attr.addFlashAttribute("purId",id);
 
+			log.info("Purchase Registred Successfully !");
+			return "redirect:register";
 		}
 		else
 		{
-			map.addAttribute("msg","enter valid details");
+			map.addAttribute("emsg","enter valid details");
+			map.addAttribute("listshipment",shservice.getEnableShipmentIdsAndCodes());
+			map.addAttribute("listvendor",whservice.getAllWhUserByType("Vendor"));
+			
+			log.info("Failed to Register !");
+			return "PurchaseRegister";
 		}
 
 
-		map.addAttribute("listshipment",shservice.getEnableShipmentIdsAndCodes());
-		map.addAttribute("listvendor",whservice.getAllWhUserByType("Vendor"));
-		
-		return "PurchaseRegister";
 	}
 
 	// 3. all
@@ -117,10 +128,9 @@ public class PurchaseController {
 	
 
 	//4 . show one record
-	@RequestMapping("/view")
-	public String showOneRecord(@RequestParam Integer id,ModelMap map)
+	@RequestMapping("/view/{id}")
+	public String showOneRecord(@PathVariable Integer id,ModelMap map)
 	{
-		//map.addAttribute("listshipment",shservice.getShipementIdsAndCodes());
 		map.addAttribute("listshipment",shservice.getEnableShipmentIdsAndCodes());
 		map.addAttribute("listvendor",whservice.getAllWhUserByType("Vendor"));
 		
@@ -128,16 +138,19 @@ public class PurchaseController {
 		return "PurchaseView";
 	}
 	
+	
 	//5 -Delete
-	@RequestMapping("/delete")
-	public String deleteById(@RequestParam("id")Integer id,ModelMap map)
+	@RequestMapping("/delete/{id}")
+	public String deleteById(@PathVariable Integer id,RedirectAttributes map)
 	{
 		service.deletePurchase(id);
-		map.addAttribute("list",service.getAllPurchases());
-		map.addAttribute("msg", "purchase "+id+" Deleted Successfully");
-		return "PurchaseData";
+		map.addFlashAttribute("msg", "purchase "+id+" Deleted Successfully");
+	
+		log.info("Purchase Deleted Successfully");
+		return "redirect:all";
 
 	}		
+	
 	
 	// 6 -  Update 
 	@RequestMapping(value="/update",method=RequestMethod.POST)
@@ -145,21 +158,22 @@ public class PurchaseController {
 	{
 
 		validator.validate(purchase, errors);
-		System.out.println(purchase);
 		if(!errors.hasErrors())
 		{
 			//call service
 			service.updatePurchase(purchase);
 			map.addAttribute("msg", "purchase '"+purchase.getPurId()+"' update successfully ");
+			
+			log.info("Purchase Updated Successfully");
 		}
 		else
 		{
-			map.addAttribute("msg","Enter Valid Details");
+			map.addAttribute("emsg","Enter Valid Details");
+			log.info("failed to update !");
 		}
 
 		map.addAttribute("purchase",service.getPurchaseById(purchase.getPurId())); // data for purchase view page
-//		map.addAttribute("listshipment",shservice.getShipementIdsAndCodes());
-		map.addAttribute("listshipment",shservice.getAllShipmentTypes());
+		map.addAttribute("listshipment",shservice.getEnableShipmentIdsAndCodes());
 		map.addAttribute("listvendor",whservice.getAllWhUserByType("Vendor"));
 		
 		return "PurchaseView";
@@ -174,7 +188,7 @@ public class PurchaseController {
 	public ModelAndView showExcel(@RequestParam(value="id",required=false,defaultValue="0")Integer id)
 	{
 		ModelAndView m = new ModelAndView();
-	//	m.setView(new PurchaseExcelView());
+		m.setView(new PurchaseExcelView());
 		
 		if(id==0)
 		{
@@ -184,6 +198,8 @@ public class PurchaseController {
 		{
 			m.addObject("list", Collections.singletonList(service.getPurchaseById(id)));
 		}
+		
+		log.info("Excel report generated");
 		return m;
 	}
 	
@@ -196,7 +212,7 @@ public class PurchaseController {
 		//creating ModelAndView for sending data to excel view
 		ModelAndView m = new ModelAndView();
 		//setting view 
-	//	m.setView(new PurchasePdfView());
+		m.setView(new PurchasePdfView());
 		
 		if(id==0) //means no id parameter with path
 		{
@@ -208,6 +224,7 @@ public class PurchaseController {
 			m.addObject("list",Collections.singletonList(service.getPurchaseById(id)) );
 		}
 		
+		log.info("Pdf Report Generated");
 		return m;
 	}
 	
@@ -258,6 +275,8 @@ public class PurchaseController {
 
 		//all added items to show in table
 		map.addAttribute("dtls",dtls );
+		
+		
 
 	}
 

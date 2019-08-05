@@ -1,7 +1,20 @@
 <span th:replace="~{shared/Menubar :: header}"></span>
 
 
-<main class="container mt-5">
+<main class="container mt-3">
+
+<div th:if="${msg}" class=" flex-row-reverse ">
+	    <div class="alert alert-success p-2" role="alert">
+	        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <strong  th:text="${msg}"></strong> 
+	    </div>
+ </div>
+<div th:if="${emsg}" class=" flex-row-reverse">
+	    <div class="alert alert-danger p-2" role="alert">
+	        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <strong  th:text="${emsg}" ></strong> 
+	    </div>
+</div>
 
 
 
@@ -39,7 +52,7 @@
 		       		<div class="col-md-6 col-xs-12">
 		       			<input th:field="*{uomCode}"  class="form-control" required="true" placeholder="Enter Uom Code"/>
 					 	<div class="text-left">
-					 		<span th:field="*{uomCode}" class="text-danger" ></span>
+					 		<span th:errors="*{uomCode}" class="text-danger" ></span>
 					 		<span id="msg" class="text-danger text-left"></span>	
 					 	</div>
 		       		</div>
@@ -137,8 +150,8 @@
 
 </main>
 
-<span th:include="~{shared/Footer :: footer (~{::body},'home')}">
-</span>
+<th:block th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</th:block>
 
 
 <script>

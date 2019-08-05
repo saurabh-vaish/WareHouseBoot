@@ -1,6 +1,19 @@
 <span th:replace="~{shared/Menubar :: header}"></span>
 
-<main class="container mt-5">
+<main class="container mt-3">
+
+<div th:if="${msg}" class=" flex-row-reverse ">
+	    <div class="alert alert-success p-2" role="alert">
+	        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <strong  th:text="${msg}"></strong> 
+	    </div>
+ </div>
+<div th:if="${emsg}" class=" flex-row-reverse">
+	    <div class="alert alert-danger p-2" role="alert">
+	        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <strong  th:text="${emsg}" ></strong> 
+	    </div>
+</div>
 
 
 
@@ -18,7 +31,7 @@
 								<label for="itemCode" class="control-label">Item Code</label>
 							</div>
 							<div class="col-md-6 col-xs-12">
-								<input type="text" th:text="*{itemCode}" class="form-control" required="true" placeholder="Enter Item Code"/>
+								<input type="text" th:field="*{itemCode}" class="form-control" required="true" placeholder="Enter Item Code"/>
 								<div class="text-left">
 									<span th:errors="*{itemCode}" class="text-danger" ></span>
 									<span id="msg" class="text-danger"></span>	
@@ -31,15 +44,15 @@
 								<label for="itemLength" class="control-label">Item Dimensions</label>
 							</div>
 							<div class="col-md-2 col-xs-4">
-								<input type="text"  th:text="*{itemLength}" class="form-control num" required="true" placeholder="Length"/>
+								<input type="text"  th:field="*{itemLength}" class="form-control num" required="true" placeholder="Length"/>
 								<div class="text-left"><span th:errors="*{itemLength}" class="text-danger" ></span>	</div>
 							</div>
 							<div class="col-md-2 col-xs-4">
-								<input type="text"  th:text="*{itemWidth}" class="form-control num" required="true" placeholder=" Width"/>
+								<input type="text"  th:field="*{itemWidth}" class="form-control num" required="true" placeholder=" Width"/>
 								<div class="text-left"><span th:errors="*{itemWidth}" class="text-danger" ></span>	</div>
 							</div>
 							<div class="col-md-2 col-xs-4">
-								<input type="text"  th:text="*{itemHeight}" class="form-control num" required="true" placeholder="Height"/>
+								<input type="text"  th:field="*{itemHeight}" class="form-control num" required="true" placeholder="Height"/>
 								<div class="text-left"><span th:errors="*{itemHeight}" class="text-danger" ></span>	</div>
 							
 							</div>
@@ -50,7 +63,7 @@
 								<label for="baseCost" class="control-label">Base Cost</label>
 							</div>
 							<div class="col-md-6 col-xs-12">
-								<input type="text"  th:text="*{baseCost}" class="form-control num" required="true" placeholder="Enter Item Base Cost"/>
+								<input type="text"  th:field="*{baseCost}" class="form-control num" required="true" placeholder="Enter Item Base Cost"/>
 								<span class="errmsg text-danger"></span>
 							
 							<div class="text-left"><span th:errors="*{baseCost}" class="text-danger" ></span> </div>
@@ -62,7 +75,7 @@
 								<label for="baseCurr" class="control-label">Base Currency</label>
 							</div>
 							<div class="col-md-6 col-xs-12">
-								<select th:text="*{baseCurr}" class="form-control" required="true">
+								<select th:field="*{baseCurr}" class="form-control" required="true">
 									<option value="">-Select Base Currency-</option>
 									<option value="INR">INR</option>
 									<option value="USD">USD</option>
@@ -80,9 +93,9 @@
 								<label for="uom.id" class="control-label">Item Uom	</label>
 							</div>
 							<div class="col-md-6 col-xs-12">
-								<select th:text="*{uom.id}" class="form-control" required="true"> <!--  here uom.id indicates PK of Uom -->
+								<select th:field="*{uom.id}" class="form-control" required="true"> <!--  here uom.id indicates PK of Uom -->
 										<option value="">-Select Item Uom-</option>
-										<options items="${listuom}" itemLabel="uomCode" itemValue="id"></options>
+										<option th:each="ob:${listuom}" th:text="${ob.uomCode}" th:value="${ob.id}"></option>
 								</select>
 							<div class="text-left"><span th:errors="*{uom.id}" class="text-danger" ></span>	</div>
 							</div>
@@ -93,9 +106,9 @@
 								<label for="order.orderId" class="control-label">Order Method Code</label>
 							</div>
 							<div class="col-md-6 col-xs-12">
-								<select th:text="*{order.orderId}" class="form-control" required="true"> <!--  here uom.id indicates PK of Uom -->
+								<select th:field="*{order.orderId}" class="form-control" required="true"> <!--  here uom.id indicates PK of Uom -->
 										<option value="">-Select Order Method Code-</option>
-										<options items="${listorder}" itemLabel="orderCode" itemValue="orderId"></options>
+										<option th:each="ob:${listorder}" th:text="${ob.orderCode}" th:value="${ob.orderId}"></option>
 								</select>
 							<div class="text-left"><span th:errors="*{order.orderId}" class="text-danger" ></span>	</div>
 							</div>
@@ -106,10 +119,9 @@
 								<label for="user1.whId" class="control-label">Vendor</label>
 							</div>
 							<div class="col-md-6 col-xs-12">
-								<select th:text="*{user1.whId}" class="form-control" required="true"> <!--  here uom.id indicates PK of Uom -->
+								<select th:field="*{user1.whId}" class="form-control" required="true"> <!--  here uom.id indicates PK of Uom -->
 										<option value="">-Select Vendor-</option>
-<%-- 										<options items="${listvendor}" itemLabel="whCode" itemValue="whId"></options>
- --%>										<options items="${listvendor}" ></options>  <!--  it is having map with id,code so no need to write itemLabel and itemValue -->
+										<option th:each="map:${listvendor}" th:text="${map.value}" th:value="${map.key}"></option>
 								</select>
 							<div class="text-left"><span th:errors="*{user1.whId}" class="text-danger" ></span>	</div>
 							</div>
@@ -120,10 +132,9 @@
 								<label for="user2.whId" class="control-label">Customer</label>
 							</div>
 							<div class="col-md-6 col-xs-12">
-								<select th:text="*{user2.whId}" class="form-control" required="true"> <!--  here uom.id indicates PK of Uom -->
+								<select th:field="*{user2.whId}" class="form-control" required="true"> <!--  here uom.id indicates PK of Uom -->
 										<option value="">-Select Customer-</option>
-<%-- 										<options items="${listcustomer}" itemLabel="whCode" itemValue="whId"></options>
- --%>										<options items="${listcustomer}" ></options> 		<!--  it is having map with id,code so no need to write itemLabel and itemValue -->
+ 										<option th:each="map:${listcustomer}" th:text="${map.value}" th:value="${map.key}"></option>
 								</select>
 							<div class="text-left"><span th:errors="*{user2.whId}" class="text-danger" ></span>	</div>
 							</div>
@@ -134,7 +145,7 @@
 								<label for="note" class="control-label">DESCRIPTION</label>
 							</div>
 							<div class="col-md-6 col-xs-12">
-								<textarea th:text="*{note}" class="form-control" required="true" placeholder="Enter Any Note"></textarea>
+								<textarea th:field="*{note}" class="form-control" required="true" placeholder="Enter Any Note"></textarea>
 							<div class="text-left"><span th:errors="*{note}" class="text-danger" ></span>	</div>
 							</div>
 						</div>

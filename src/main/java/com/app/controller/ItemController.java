@@ -10,11 +10,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.app.model.Item;
 import com.app.model.OrderMethod;
@@ -26,6 +28,11 @@ import com.app.validator.ItemValidator;
 import com.app.view.ItemExcelView;
 import com.app.view.ItemPdfView;
 
+import lombok.extern.log4j.Log4j2;
+
+
+
+@Log4j2
 @Controller
 @RequestMapping("/item")
 public class ItemController {
@@ -49,6 +56,8 @@ public class ItemController {
 	@Autowired
 	private ServletContext context;
 	
+	
+	
 	//1. regsiter page
 
 	@RequestMapping("/register")
@@ -66,6 +75,7 @@ public class ItemController {
 		return "ItemRegister";
 	}
 	
+	
 	// * ajax  method for checking duplicate codes
 	@RequestMapping("/check")
 	public @ResponseBody String checkOrderCode(@RequestParam("code")String code) //@ResponseBody for ajax call
@@ -82,27 +92,25 @@ public class ItemController {
 				break;
 			}
 		}
-		System.out.println(msg);
+	
+		log.info(msg);
 		return msg;
 	}	
 
 
 	// 2. save 
 	@RequestMapping("/save")
-	public String saveItem(@ModelAttribute Item item,Errors errors,ModelMap map)
+	public String saveItem(@ModelAttribute Item item,Errors errors,ModelMap map,RedirectAttributes attr)
 	{
 		validator.validate(item, errors);
 		
 		if(!errors.hasErrors()) // no error
 		{
 			Integer id = service.saveItem(item);
-			map.addAttribute("msg","Item '"+id+"' saved successfully");
-			map.addAttribute("item",new Item()); // form backing object
-			map.addAttribute("listuom",uomService.getAllUoms());
-			map.addAttribute("listorder",orderService.getAllOrderMethods());
-			map.addAttribute("listvendor",whservice.getAllWhUserByType("Vendor"));
-			map.addAttribute("listcustomer",whservice.getAllWhUserByType("Customer"));
+			attr.addFlashAttribute("msg","Item '"+id+"' saved successfully");
 			
+			log.info("Item Registred Successfully");
+			return "redirect:register";
 		}
 		else
 		{
@@ -111,7 +119,9 @@ public class ItemController {
 			map.addAttribute("listvendor",whservice.getAllWhUserByType("Vendor"));
 			map.addAttribute("listcustomer",whservice.getAllWhUserByType("Customer"));
 			
-			map.addAttribute("msg","enter valid details");
+			map.addAttribute("emsg","enter valid details");
+
+			log.info("Item Registration Failed !");
 		}
 
 		return "ItemRegister";
@@ -127,10 +137,11 @@ public class ItemController {
 		return "ItemData";
 	}
 	
+	
 
 	//4 . show one record
-	@RequestMapping("/view")
-	public String showOneRecord(@RequestParam Integer id,ModelMap map)
+	@RequestMapping("/view/{id}")
+	public String showOneRecord(@PathVariable Integer id,ModelMap map)
 	{
 		map.addAttribute("listuom",uomService.getAllUoms());
 		map.addAttribute("item",service.getItemById(id));
@@ -141,16 +152,22 @@ public class ItemController {
 		return "ItemView";
 	}
 	
+	
+	
 	//5 -Delete
-	@RequestMapping("/delete")
-	public String deleteById(@RequestParam("id")Integer id,ModelMap map)
+	@RequestMapping("/delete/{id}")
+	public String deleteById(@PathVariable Integer id,ModelMap map)
 	{
 		service.deleteItem(id);
 		map.addAttribute("list",service.getAllItems());
 		map.addAttribute("msg", "item "+id+" Deleted Successfully");
+		
+		log.info("Item deleted successfully");
 		return "ItemData";
 
 	}		
+	
+	
 	
 	// 6 -  Update 
 	@RequestMapping(value="/update",method=RequestMethod.POST)
@@ -158,16 +175,20 @@ public class ItemController {
 	{
 
 		validator.validate(item, errors);
-		System.out.println(item);
+
 		if(!errors.hasErrors())
 		{
 			//call service
 			service.updateItem(item);
 			map.addAttribute("msg", "item '"+item.getItemId()+"' update successfully ");
+			
+			log.info("Item Updated Successfully");
 		}
 		else
 		{
-			map.addAttribute("msg","Enter Valid Details");
+			map.addAttribute("emsg","Enter Valid Details");
+
+			log.info("Item Updatation Failed");
 		}
 
 		map.addAttribute("item",service.getItemById(item.getItemId())); // data for item view page
@@ -198,6 +219,9 @@ public class ItemController {
 		{
 			m.addObject("list", Collections.singletonList(service.getItemById(id)));
 		}
+		
+		log.info("Excel Report Generated");
+		
 		return m;
 	}
 	
@@ -222,6 +246,7 @@ public class ItemController {
 			m.addObject("list",Collections.singletonList(service.getItemById(id)) );
 		}
 		
+		log.info("Pdf Report Generated");
 		return m;
 	}
 	

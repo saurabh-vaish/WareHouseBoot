@@ -10,13 +10,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.app.model.Purchase;
 import com.app.model.Uom;
 import com.app.service.IUomService;
 import com.app.util.UomUtil;
@@ -24,6 +25,9 @@ import com.app.validator.UomValidator;
 import com.app.view.UomExcelView;
 import com.app.view.UomPdfView;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 @Controller
 @RequestMapping("/uom")
 public class UomController {
@@ -48,6 +52,7 @@ public class UomController {
 		{
 			// form backing object
 			map.addAttribute("uom",new Uom());
+		
 			return "UomRegister";
 		}
 		
@@ -70,7 +75,7 @@ public class UomController {
 				}
 			}
 
-			System.out.println(msg);
+			log.info(msg);
 			return msg;
 
 		}
@@ -79,25 +84,30 @@ public class UomController {
 		
 		//2-Save
 		@RequestMapping(value="/save",method=RequestMethod.POST)
-		public String saveUom(@ModelAttribute Uom uom,Errors errors,ModelMap map)
+		public String saveUom(@ModelAttribute Uom uom,Errors errors,ModelMap map,RedirectAttributes attr)
 		{
 			validator.validate(uom, errors);
 			
 			if(!errors.hasErrors()) 
 			{
 				Integer id=service.saveUom(uom);
-				map.addAttribute("msg","Uom '"+id+"' saved successfully");
-				map.addAttribute("uomId",id);
-				//clear form backing object
-				map.addAttribute("uom",new Uom());
+				attr.addFlashAttribute("msg","Uom '"+id+"' saved successfully");
+				attr.addFlashAttribute("uomId",id);
+
+				log.info("uom registred successfully");
+				
+				return "redirect:register";
 			}
 			else
 			{
-				map.addAttribute("msg","Enter Valid Details");
+				map.addAttribute("emsg","Enter Valid Details");
 				
+				log.info("uom registration failed , error occured");
 			}			
 			return "UomRegister";
 		}
+		
+		
 		
 		//3-show all
 		@RequestMapping("/all")
@@ -108,9 +118,11 @@ public class UomController {
 			return "UomData";
 		}
 		
+		
+		
 		//. show one record
-		@RequestMapping("/view")
-		public String showOneRecord(@RequestParam Integer id,ModelMap map)
+		@RequestMapping("/view/{id}")
+		public String showOneRecord(@PathVariable Integer id,ModelMap map)
 		{
 			map.addAttribute("uom",service.getUomId(id));
 			return "UomView";
@@ -118,13 +130,15 @@ public class UomController {
 
 		
 		//4-Delete
-		@RequestMapping("/delete")
-		public String deleteById(@RequestParam("id")Integer id,ModelMap map)
+		@RequestMapping("/delete/{id}")
+		public String deleteById(@PathVariable Integer id,RedirectAttributes map)
 		{
 			service.deleteUom(id);
-			map.addAttribute("list",service.getAllUoms());
-			map.addAttribute("msg", "uom "+id+" Deleted Successfully");
-			return "UomData";
+			map.addFlashAttribute("msg", "uom "+id+" Deleted Successfully");
+
+			log.info("uom deleted successfully");
+			
+			return "redirect:all";
 			
 		}
 
@@ -135,22 +149,28 @@ public class UomController {
 		{
 					
 			validator.validate(uom, errors);
-			System.out.println(uom);
-			if(!errors.hasErrors())
+
+			 if(!errors.hasErrors())
 			{
 				//call service
 				service.updateUom(uom);
 				map.addAttribute("msg", "uom '"+uom.getId()+"' update successfully ");
+				
+				log.info("uom updated successfully");
 			}
 			else
 			{
-				map.addAttribute("msg","Enter Valid Details");
+				map.addAttribute("emsg","Enter Valid Details");
+				
+				log.info("uom can't be updated ,error occured");
 			}
 					
 			map.addAttribute("uom",service.getUomId(uom.getId())); // data for uom view page
 			return "UomView";
 		}
 
+		
+		
 		//7. export to excel
 		@RequestMapping("/excel")
 		public ModelAndView getExcel(@RequestParam(value="id",required=false,defaultValue="0")Integer id) // here required is false bcs we are using same method for both
@@ -170,7 +190,8 @@ public class UomController {
 				 // getting data according to id
 				m.addObject("list", Collections.singletonList(service.getUomId(id)));  // converting single row object to list
 			}
-				  
+		
+			log.info("Excel Report Generated");
 			return m;
 			
 		}
@@ -197,8 +218,11 @@ public class UomController {
 				m.addObject("list",Collections.singletonList(service.getUomId(id)) );
 			}
 			
+			log.info("Pdf Report Generated");
 			return m;
 		}
+		
+		
 		
 		// 9 pie and bar chart
 		@RequestMapping("/chart")
@@ -208,6 +232,8 @@ public class UomController {
 			List<Object[]> data = service.getUomCountByUomType();
 			util.ganeratePie(path, data);
 			util.ganerateBar(path,data);
+			
+			log.info("Chart Generated");
 			return "UomReports";
 		}
 		

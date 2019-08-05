@@ -1,7 +1,6 @@
 <span th:replace="~{shared/Menubar :: header}"></span>
 
-<main class="container mt-5">
-
+<main class="container mt-3">
 
 
 <style>
@@ -35,16 +34,16 @@
 					<th>UOM CODE</th>
 					<th>ORDER MODE</th>
 					<th colspan="3">OPRATION</th>
-				</tr>
+				</tr> 
 					<tr th:each="obj:${list}" class="text-center">
 						<td th:text="${obj.itemId}" ></td>
 						<td th:text="${obj.itemCode}" ></td>
 						<td th:text="${obj.baseCost}" ></td>
 						<td th:text="${obj.uom.uomCode}" ></td>
 						<td th:text="${obj.order.orderMode}" ></td>
-						<td><a href="@{view/{id}(id=${obj.itemId})" class="btn btn-success">View&nbsp;<i class="fa fa-eye"></i> </a></td>
-						<td><a class="btn btn-primary" href="@{excel/{id}(id=${obj.itemId})">Excel &nbsp;<i class="fa fa-file-excel-o"></i></a></td>
-						 <td><a class="btn btn-info"  href="@{pdf/{id}(id=${obj.itemId})">Pdf &nbsp;<i class="fa fa-file-pdf-o"></i></a></td>
+						<td><a th:href="@{view/{id}(id=${obj.itemId})}" class="btn btn-success">View&nbsp;<i class="fa fa-eye"></i> </a></td>
+						<td><a class="btn btn-primary" th:href="@{excel?id={id}(id=${obj.itemId})}">Excel &nbsp;<i class="fa fa-file-excel-o"></i></a></td>
+						 <td><a class="btn btn-info"  th:href="@{pdf?id={id}(id=${obj.itemId})}">Pdf &nbsp;<i class="fa fa-file-pdf-o"></i></a></td>
 						
 					</tr>
 					

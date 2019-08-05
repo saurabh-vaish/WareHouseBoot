@@ -15,11 +15,7 @@ public interface WhUserRepository extends JpaRepository<WhUser, Integer>{
 
 	
 	@Query("select w.whId,w.whCode from com.app.model.WhUser as w where w.whType=:whType")
-	public List<ViewG> findAllWhUserByType(String whType);
+	public List<Object[]> findAllWhUserByType(String whType);
 	
-	interface ViewG
-	{
-		Integer getWhId();
-		String getWhCode();
-	}
+	
 }
