@@ -58,14 +58,14 @@
 							<th>BASE COST</th>
 							<th>QTY</th>
 							<th>LINE TOTAL</th>
+							<th></th>
 						</tr>
 						<tr th:each="poDtl:${dtls}">
 								<td th:text="${poDtl.slno}" ></td>
 								<td th:text="${poDtl.itemDtl.itemCode}" ></td>
 								<td th:text="${poDtl.itemDtl.baseCost}" ></td>
 								<td th:text="${poDtl.itemsQty}" ></td>
-								<td th:text="${poDtl.itemDtl.baseCost}" ></td>
-								<td th:text="${poDtl.itemsQty*1.0}" ></td>
+								<td th:text="${poDtl.itemDtl.baseCost}*${poDtl.itemsQty}" ></td>
 								
 								<th:block th:if="${poStatus =='PICKING' }">
 									<td><a th:href="@{removeItem(orderDtlId=${poDtl.orderDtlId},orderId=${poDtl.poHdrId})}"

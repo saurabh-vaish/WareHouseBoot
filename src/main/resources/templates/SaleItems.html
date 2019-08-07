@@ -1,8 +1,6 @@
 <span th:replace="~{shared/Menubar :: header}"></span>
 
-<main class="container mt-5">
-
-
+<main class="container mt-3">
 
 <div class="card border-primary box">
 
@@ -34,17 +32,17 @@
 				<div class="row">
 					<div class="col-2"><label for="item.itemId" class="control-label"> Choose Item</label></div>
 					<div class="col-3">
-						<select th:field=*{item.itemId}" class="form-control"  required="true">
+						<select th:field="*{item.itemId}" class="form-control"  required="true">
 									<option value="">--SELECT--</option>
-									<options items="${item}" />
+									<option th:each="map:${item}" th:value="${map.key}" th:text="${map.value}" ></option>
 						</select>
 					</div>
 					
 					<div class="col-2"><label for="quantity" class="control-label">Quantity</label></div>
-					<div class="col-3"><input th:field=*{quantity}" class="form-control" required="true" placeholder="Enter Quantity"/></div>
+					<div class="col-3"><input th:field="*{quantity}" class="form-control" required="true" placeholder="Enter Quantity"/></div>
 					<div class="col-2"><input type="submit" value="ADD ITEM" class="btn btn-success"></div>
 				
-				<input type="text" th:field=*{soHoId}" hidden />
+				<input type="text" th:field="*{soHoId}" hidden />
 				</div>
 				
 									
@@ -64,19 +62,19 @@
 						<th>LINE TOTAL</th>
 						<th th:if="${orderStatus == 'OPEN' || orderStatus == 'READY'}">OPERATIONS</th>
 					</tr>
-						<tr th:if="sdl:${salesDetailsList}">
+						<tr th:each="sdl:${salesDetailsList}">
 							<td th:text="${sdl.slno}"></td>
 							<td th:text="${sdl.item.itemCode}"></td>
 							<td th:text="${sdl.item.baseCost}"></td>
 							<td th:text="${sdl.quantity}"></td>
-							<td th:text="${sdl.item.baseCost*sdl.quantity}"></td>
+							<td th:text="${sdl.item.baseCost}*${sdl.quantity}"></td>
 							<td th:if="${orderStatus=='READY'}">
-							<a th:href="@{removeItem?salesDtlsId=${sdl.salesDtlsId}&saleOrderId=${sdl.soHoId}}"
+							<a th:href="@{removeItem(salesDtlsId=${sdl.salesDtlsId},saleOrderId=${sdl.soHoId})}"
 									class="btn btn-danger btnbox">DELETE</a></td>
 						</tr>
 						<tr th:if="${orderStatus=='READY'}">
 							<td colspan="6" align="center">
-							<a th:href="@{updateOrderStatus?saleOrderId=${saleOrderId}&orderStatus=CONFIRM}"
+							<a th:href="@{updateOrderStatus(saleOrderId=${saleOrderId},orderStatus=CONFIRM)}"
 								class="btn btn-success btnbox">CONFIRM OREDER</a></td>
 						</tr>
 				</table>
@@ -90,8 +88,8 @@
 			
 </main>
 
-<span th:include="~{shared/Footer :: footer (~{::body},'home')}">
-</span>
+<th:block th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</th:block>
 
 <script>
 

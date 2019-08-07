@@ -27,7 +27,7 @@ public class SaleOrderPdfView extends AbstractPdfView{
 
 
 		// read date from model fdata
-		List<SaleOrder> saleOrder=(List<SaleOrder>) model.get("saleOrder");
+		List<SaleOrder> saleOrder=(List<SaleOrder>) model.get("list");
 
 		//create any element
 		document.add(new Paragraph("ALL PURCHASES"));

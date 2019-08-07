@@ -1,8 +1,20 @@
 <span th:replace="~{shared/Menubar :: header}"></span>
 
 
-<main class="container mt-5">
+<main class="container mt-3">
 
+<div th:if="${msg}" class=" flex-row-reverse ">
+	    <div class="alert alert-success p-2" role="alert">
+	        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <strong  th:text="${msg}"></strong> 
+	    </div>
+ </div>
+<div th:if="${emsg}" class=" flex-row-reverse">
+	    <div class="alert alert-danger p-2" role="alert">
+	        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <strong  th:text="${emsg}" ></strong> 
+	    </div>
+</div>
 
 
 <div class="card border-primary box">
@@ -11,7 +23,7 @@
 		<h2 class="text-center">
 			<span >Welcome to Sale Order View Page</span>
 			<span class="float-right">
-				<a class="text-dark"  href="pdf?id=${saleOrder.saleId}"><i class="fa fa-print"></i></a>
+				<a class="text-dark"  th:href="@{pdf(id=${saleOrder.saleId})}"><i class="fa fa-print"></i></a>
 			</span>		
 		</h2>
 	</div>
@@ -65,7 +77,7 @@
 		
 		
 	</div>
-	<div th:text="${msg != null}" class="card-footer text-danger bg-success">
+	<div th:if="${msg != null}" class="card-footer text-danger bg-success">
 		<span th:text="${msg}"></span> 
 	</div>
 
@@ -92,7 +104,7 @@
       <div class="modal-footer container" style="display:block">
       	<div class="row">
       		<div class="col-6">
-		        <a class="btn btn-danger btn-block" th:href="@{delete/{id}(id=${saleOrder.saleId})}">Yes</a>
+		        <a class="btn btn-danger btn-block" th:href="@{/sale/delete/id={id}(id=${saleOrder.saleId})}">Yes</a>
       		</div>
       		<div class="col-6">
 		        <button type="button" class="btn btn-success btn-block" data-dismiss="modal" >No</button>
@@ -114,7 +126,7 @@
     <div class="modal-content">
 
       <!-- Modal Header -->
-      <div class="modal-header bg-success text-center">
+      <div class="modal-header bg-success text-center">  
         <h4 class="modal-title text-center">Edit SaleOrder</h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
@@ -122,7 +134,7 @@
       <!-- Modal body -->
       <div class="modal-body text-center">
       
-      <form  th:action="@{update}" method="POST" th:object="${saleOrder}" class="form form-horizontal">
+      <form  th:action="@{/sale/update}" method="POST" th:object="${saleOrder}" class="form form-horizontal">
 					
 						<div class="row form-group">
 							<div class="col-md-4 col-xs-12 ">
@@ -155,9 +167,9 @@
 								<label for="shipmentCode.shipmentId" class="control-label">Shipment Code</label>
 							</div>
 							<div class="col-md-6 col-xs-12">
-								<select th:field="*{shipmentCode.shipmentId" class="form-control" required="true"> 
+								<select th:field="*{shipmentCode.shipmentId}" class="form-control" required="true"> 
 										<option value="">-Select Shipment Code-</option>
-										 <options items="${listshipment}" ></options>
+										 <option th:each="map:${listshipment}" th:value="${map.key}" th:text="${map.value}" ></option>
 								</select>
 							<div class="text-left"><span th:errors="*{shipmentCode}" class="text-danger" ></span>	</div>
 							</div>
@@ -169,9 +181,9 @@
 								<label for="vendor.whId" class="control-label">Customer</label>
 							</div>
 							<div class="col-md-6 col-xs-12">
-								<select th:field="*{customer.whId" class="form-control" required="true">
+								<select th:field="*{customer.whId}" class="form-control" required="true">
 										<option value="">-Select Customer-</option>
-										<options items="${listcustomer}" ></options>
+										 <option th:each="map:${listcustomer}" th:value="${map.key}" th:text="${map.value}" ></option>
 								</select>
 							<div class="text-left"><span th:errors="*{customer}" class="text-danger" ></span>	</div>
 							</div>
@@ -230,7 +242,7 @@
 								<label for="status" class="control-label">Default Status</label>
 							</div>
 							<div class="col-md-6 col-xs-12">
-								<input type="text" th:field="*{status" class="form-control num" required="true" value="OPEN" readonly="true"/>
+								<input type="text" th:field="*{status}" class="form-control num" required="true"  readonly="true"/>
 								<span class="errmsg text-danger"></span>
 							
 							<div class="text-left"><span th:errors="*{status}" class="text-danger" ></span> </div>
@@ -274,8 +286,8 @@
 
 </main>
 
-<span th:include="~{shared/Footer :: footer (~{::body},'home')}">
-</span>
+<th:block th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</th:block>
 
 
 <script>

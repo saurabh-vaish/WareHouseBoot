@@ -1,6 +1,6 @@
 <span th:replace="~{shared/Menubar :: header}"></span>
 
-<main class="container mt-5">
+<main class="container mt-3">
 
 <style>
 
@@ -37,7 +37,7 @@ th{
 					<th>SHIPMENT CODE</th>
 					<th colspan="9" align="center">OPERATIONS</th>
 				</tr>
-					<tr th:each="obj:${list }" class="text-center">
+					<tr th:each="so:${list }" class="text-center">
 						<td th:text="${so.saleId}" ></td>
 						<td th:text="${so.orderCode}" ></td>
 						<td class="text-info" th:text="${so.status}"></td>
@@ -46,14 +46,17 @@ th{
 						<td th:text="${so.shipmentCode.shipmentCode}"></td>
 						<td>
 							<th:block th:switch="${so.status}">
-								<div th:case="('OPEN' || 'READY')"> 
+								<div th:case="'OPEN'"> 
+									<b>To Be Confirmed</b>
+								</div>
+								<div th:case="'READY'"> 
 									<b>To Be Confirmed</b>
 								</div>
 								<div th:case="'CONFIRM'">
-									<a th:href="@{updateOrderStatus?saleOrderId=${so.saleId}&orderStatus=INVOICED}" class="btn btn-success"><b>INVOICE</b></a>
+									<a th:href="@{updateOrderStatus(saleOrderId=${so.saleId}&orderStatus=INVOICED)}" class="btn btn-success"><b>INVOICE</b></a>
 								</div>
 								<div th:case="'INVOICED'">
-									<a th:href="@{viewInvoice?saleOrderId=${so.saleId}}" class="text-dark"><b>SHOW VENDOR INVOICE</b></a>
+									<a th:href="@{viewInvoice(saleOrderId=${so.saleId})}" class="text-dark"><b>SHOW VENDOR INVOICE</b></a>
 								</div>
 								<div th:case="'CANCELLED'">
 									<font color="red">Order Cancelled</font>
@@ -62,13 +65,13 @@ th{
 						</td>
 						<td>
 							<span th:if="${so.status == 'OPEN' || so.status == 'READY' || so.status == 'CONFIRM'}">
-								<a th:href="@{updateOrderStatus?saleOrderId=${so.saleId}&orderStatus=CANCELLED}" class="btn btn-danger">Cancel</a>
+								<a th:href="@{updateOrderStatus(saleOrderId=${so.saleId},orderStatus=CANCELLED)}" class="btn btn-danger">Cancel</a>
 							</span>
 							<span th:if="${so.status != 'OPEN' && so.status != 'READY' && so.status != 'CONFIRM'}"> 
 								<a  class="btn btn-danger disabled" >CANCEL</a>
 							</span>
 						</td>
-						<td><a th:href="@{viewItems?saleOrderId=${so.saleId}}" class="text-dark"><b>
+						<td><a th:href="@{viewItems(saleOrderId=${so.saleId})}" class="text-dark"><b>
 							<span th:if="${so.status == 'OPEN' || so.status == 'CANCELED'}">
 								<i class="fa fa-cart-plus fa-3x"></i>
 							</span>
@@ -77,8 +80,8 @@ th{
 							</span>
 						</b> </a></td> 	
 						<td><a th:href="@{view/{id}(id=${so.saleId})}" class="btn btn-success">View&nbsp;<i class="fa fa-eye"></i> </a></td>
-						<td><a class="btn btn-primary" th:href="@{excel/{id}(id=${so.saleId})}">Excel &nbsp;<i class="fa fa-file-excel-o"></i></a></td>
-						<td><a class="btn btn-info"  th:href="@{pdf/{id}(id=${so.saleId})}">Pdf &nbsp;<i class="fa fa-file-pdf-o"></i></a></td>
+						<td><a class="btn btn-primary" th:href="@{excel?id={id}(id=${so.saleId})}">Excel &nbsp;<i class="fa fa-file-excel-o"></i></a></td>
+						<td><a class="btn btn-info"  th:href="@{pdf?id={id}(id=${so.saleId})}">Pdf &nbsp;<i class="fa fa-file-pdf-o"></i></a></td>
 						
 					</tr>
 					
@@ -89,7 +92,7 @@ th{
 						<img th:src="@{/images/icons/BulkExcel.png}" class="img img-responsive img-rounded" width="70" height="50" title="Export Data to Excel"/ ></a>
 					</th>
 					<th colspan=6>
-						<a href="pdf" ><img th:src="@{/images/icons/BulkPdf.png}" width="70" height="50" title="Export Data to pdf"/ >  </a>
+						<a th:href="@{pdf}" ><img th:src="@{/images/icons/BulkPdf.png}" width="70" height="50" title="Export Data to pdf"/ >  </a>
 					</th>
 					
 				</tr>
@@ -109,8 +112,8 @@ th{
 
 </main>
 
-<span th:include="~{shared/Footer :: footer (~{::body},'home')}">
-</span>
+<th:block th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</th:block>
 
 
 

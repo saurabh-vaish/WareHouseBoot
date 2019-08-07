@@ -8,12 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.app.model.SaleOrder;
 import com.app.model.SalesDetails;
@@ -23,7 +27,13 @@ import com.app.service.IShipmentTypeService;
 import com.app.service.IWhUserService;
 import com.app.validator.SaleOrderValidator;
 import com.app.view.CustomerInvoicePdfView;
+import com.app.view.SaleOrderExcelView;
+import com.app.view.SaleOrderPdfView;
 
+import lombok.extern.log4j.Log4j2;
+
+
+@Log4j2
 @Controller
 @RequestMapping("/sale")
 public class SaleOrderController {
@@ -43,8 +53,10 @@ public class SaleOrderController {
 	@Autowired
 	private IItemService itemService;
 	
+	
+	
 	//1. register page
-	@RequestMapping("/register")
+	@GetMapping(value="/register")
 	public  String showRegister(ModelMap map)
 	{
 		/**Module Integration start**/
@@ -59,7 +71,7 @@ public class SaleOrderController {
 
 	
 	// * ajax  method for checking duplicate orders
-	@RequestMapping("/check")
+	@GetMapping("/check")
 	public @ResponseBody String checkOrderCode(@RequestParam("order")String order) //@ResponseBody for ajax call
 	{
 		String msg="";
@@ -75,14 +87,14 @@ public class SaleOrderController {
 			  }
 		  }
 		 
-		  System.out.println(msg);
+		 log.info(msg);
 		  return msg;
 
 	}
 
 	// 2. save 
-	@RequestMapping("/save")
-	public String saveSaleOrder(@ModelAttribute SaleOrder saleOrder,Errors errors,ModelMap map)
+	@PostMapping("/save")
+	public String saveSaleOrder(@ModelAttribute SaleOrder saleOrder,Errors errors,ModelMap map,RedirectAttributes attr)
 	{
 		
 		validator.validate(saleOrder, errors);
@@ -90,27 +102,31 @@ public class SaleOrderController {
 		if(!errors.hasErrors()) // no error
 		{
 			Integer id = service.saveSaleOrder(saleOrder); 
-			map.addAttribute("msg","saleOrder '"+id+"' saved successfully");
-			map.addAttribute("saleId",id);
+			attr.addFlashAttribute("msg","saleOrder '"+id+"' saved successfully");
+			attr.addFlashAttribute("saleId",id);
 			
-			map.addAttribute("saleOrder",new SaleOrder()); // form backing object
+			log.info("Sale Order Registered Successfully !");
+			
+			return "redirect:register";
 	
 		}
 		else
 		{
-			map.addAttribute("msg","enter valid details");
-		}
-		
+			map.addAttribute("emsg","enter valid details");
 
-		map.addAttribute("listshipment",shservice.getEnableShipmentIdsAndCodes());
-		map.addAttribute("listcustomer",whservice.getAllWhUserByType("Customer"));
-		return "SaleOrderRegister";
+			log.info("Sale Order can't be Registered  !");
+		
+			map.addAttribute("listshipment",shservice.getEnableShipmentIdsAndCodes());
+			map.addAttribute("listcustomer",whservice.getAllWhUserByType("Customer"));
+			return "SaleOrderRegister";
+		}
+	
 	}
 
 
 	
 	// 3. all
-	@RequestMapping("/all")
+	@GetMapping("/all")
 	public String displaySaleOrders(ModelMap map)
 	{
 		map.addAttribute("list", service.getAllSaleOrders());
@@ -119,8 +135,8 @@ public class SaleOrderController {
 	
 
 	//4 . show one record
-	@RequestMapping("/view")
-	public String showOneRecord(@RequestParam Integer id,ModelMap map)
+	@GetMapping("/view/{id}")
+	public String showOneRecord(@PathVariable Integer id,ModelMap map)
 	{
 		map.addAttribute("listshipment",shservice.getEnableShipmentIdsAndCodes());
 		map.addAttribute("listcustomer",whservice.getAllWhUserByType("Customer"));
@@ -129,37 +145,45 @@ public class SaleOrderController {
 		return "SaleOrderView";
 	}
 	
+	
+	
 	//5 -Delete
-	@RequestMapping("/delete")
-	public String deleteById(@RequestParam("id")Integer id,ModelMap map)
+	@DeleteMapping("/delete/{id}")
+	public String deleteById(@PathVariable Integer id,RedirectAttributes map)
 	{
 		service.deleteSaleOrder(id);
-		map.addAttribute("list",service.getAllSaleOrders());
-		map.addAttribute("msg", "saleOrder "+id+" Deleted Successfully");
-		return "SaleOrderData";
+		map.addFlashAttribute("list",service.getAllSaleOrders());
+		map.addFlashAttribute("msg", "saleOrder "+id+" Deleted Successfully");
+		
+		log.info("sale order deleted !");
+		return "redirect:all";
 
 	}		
 	
+	
+	
 	// 6 -  Update 
-	@RequestMapping(value="/update",method=RequestMethod.POST)
+	@PostMapping(value="/update")
 	public String updateSaleOrder(@ModelAttribute SaleOrder saleOrder,Errors errors,ModelMap map)
 	{
 
 		validator.validate(saleOrder, errors);
-		System.out.println(saleOrder);
+		
 		if(!errors.hasErrors())
 		{
 			//call service
 			service.updateSaleOrder(saleOrder);
-			map.addAttribute("msg", "saleOrder '"+saleOrder.getSaleId()+"' update successfully ");
+			map.addAttribute("msg", "saleOrder '"+saleOrder.getSaleId()+"' updated successfully ");
+			
+			log.info("sale order updated successfully !");
 		}
 		else
 		{
-			map.addAttribute("msg","Enter Valid Details");
+			map.addAttribute("emsg","Enter Valid Details");
+			log.info("sale order can't be updated !");
 		}
 
 		map.addAttribute("saleOrder",service.getSaleOrderById(saleOrder.getSaleId())); // data for saleOrder view page
-//		map.addAttribute("listshipment",shservice.getShipementIdsAndCodes());
 		map.addAttribute("listshipment",shservice.getEnableShipmentIdsAndCodes());
 		map.addAttribute("listcustomer",whservice.getAllWhUserByType("Customer"));
 		
@@ -171,11 +195,11 @@ public class SaleOrderController {
 	
 	
 	// 7. export to excel 
-	@RequestMapping("/excel")
+	@GetMapping("/excel")
 	public ModelAndView showExcel(@RequestParam(value="id",required=false,defaultValue="0")Integer id)
 	{
 		ModelAndView m = new ModelAndView();
-	//	m.setView(new SaleOrderExcelView());
+		m.setView(new SaleOrderExcelView());
 		
 		if(id==0)
 		{
@@ -185,19 +209,21 @@ public class SaleOrderController {
 		{
 			m.addObject("list", Collections.singletonList(service.getSaleOrderById(id)));
 		}
+		
+		log.info("excel report generated");
 		return m;
 	}
 	
 	
 	// 8 . export to pdf
-	@RequestMapping("/pdf")
+	@GetMapping("/pdf")
 	public ModelAndView getPdf(@RequestParam(value="id",required=false,defaultValue="0")Integer id) // here required is false bcs we are using same method for both
 	//when we are sending id in url and when not also it it will work for both
 	{
 		//creating ModelAndView for sending data to excel view
 		ModelAndView m = new ModelAndView();
 		//setting view 
-	//	m.setView(new SaleOrderPdfView());
+		m.setView(new SaleOrderPdfView());
 		
 		if(id==0) //means no id parameter with path
 		{
@@ -209,19 +235,21 @@ public class SaleOrderController {
 			m.addObject("list",Collections.singletonList(service.getSaleOrderById(id)) );
 		}
 		
+		log.info("pdf report generated");
 		return m;
 	}
 	
 	
 	// child
 	
-	@RequestMapping("/viewItems")
+	@GetMapping("/viewItems")
 	public String viewItems(@RequestParam Integer saleOrderId,ModelMap map) {
 		getSalesDtls(saleOrderId,map);
 		return "SaleItems";
 	}
 
-	@RequestMapping(value="/addItem",method=RequestMethod.POST)
+	
+	@PostMapping(value="/addItem")
 	public String addItem(@ModelAttribute SalesDetails salesDetails,ModelMap map) {
 
 		SaleOrder saleOrder=service.getSaleOrderById(salesDetails.getSoHoId());
@@ -229,19 +257,25 @@ public class SaleOrderController {
 		saleOrder.getSalesDetails().add(salesDetails);
 		service.updateSaleOrder(saleOrder);
 		getSalesDtls(salesDetails.getSoHoId(), map);
+	
+		log.info("item added");
 		return "SaleItems";
 	}
 
-	@RequestMapping("/removeItem")
+	
+	@GetMapping("/removeItem")
 	public String removeItem(@RequestParam Integer salesDtlsId,@RequestParam Integer saleOrderId,ModelMap map) {
 
 		service.deleteSalesDetailsById(salesDtlsId);
 		getSalesDtls(saleOrderId, map);
+		
+		log.info("item removed");
 		return "SaleItems";
 
 	}
 
-	@RequestMapping("/updateOrderStatus")
+	
+	@GetMapping("/updateOrderStatus")
 	public String updateOrderStatus(@RequestParam Integer saleOrderId,@RequestParam String orderStatus,ModelMap map) {
 		SaleOrder saleOrder = service.getSaleOrderById(saleOrderId);
 		saleOrder.setStatus(orderStatus);
@@ -257,16 +291,20 @@ public class SaleOrderController {
 		return page;
 	}
 	
-	@RequestMapping("/viewInvoice")
+	
+	@GetMapping("/viewInvoice")
 	public ModelAndView viewInvoice(@RequestParam Integer saleOrderId) {
 		
 		ModelAndView m = new ModelAndView(new CustomerInvoicePdfView(), 
 				"saleOrder", 
 				service.getSaleOrderById(saleOrderId));
+		
+		log.info("invoice generated");
 		return m;
 	}
 
 
+	
 	private void getSalesDtls(Integer saleOrderId,ModelMap map) {
 
 		SaleOrder saleOrder = service.getSaleOrderById(saleOrderId);
