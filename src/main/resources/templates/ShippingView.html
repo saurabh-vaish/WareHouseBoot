@@ -1,8 +1,20 @@
 <span th:replace="~{shared/Menubar :: header}"></span>
 
 
-<main class="container mt-5">
+<main class="container mt-3">
 
+<div th:if="${msg}" class=" flex-row-reverse ">
+	    <div class="alert alert-success p-2" role="alert">
+	        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <strong  th:text="${msg}"></strong> 
+	    </div>
+ </div>
+<div th:if="${emsg}" class=" flex-row-reverse">
+	    <div class="alert alert-danger p-2" role="alert">
+	        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <strong  th:text="${emsg}" ></strong> 
+	    </div>
+</div>
 
 
 <div class="card border-primary box">
@@ -11,7 +23,7 @@
 		<h2 class="text-center">
 			<span >Welcome to Shipping View Page</span>
 			<span class="float-right">
-				<a class="text-dark"  th:href="@{pdf/{id}(id=${purchase.purId})}"><i class="fa fa-print"></i></a>
+				<a class="text-dark"  th:href="@{pdfExport(shipId=${shipping.shipId})}"><i class="fa fa-print"></i></a>
 			</span>		
 		</h2>
 	</div>
@@ -91,7 +103,7 @@
       <div class="modal-footer container" style="display:block">
       	<div class="row">
       		<div class="col-6">
-		        <a class="btn btn-danger btn-block" th:href="@{delete/{shipId}(shipId=${shipping.shipId})}">Yes</a>
+		        <a class="btn btn-danger btn-block" th:href="@{delete(shipId=${shipping.shipId})}">Yes</a>
       		</div>
       		<div class="col-6">
 		        <button type="button" class="btn btn-success btn-block" data-dismiss="modal" >No</button>
@@ -128,7 +140,7 @@
 								<label for="shipId" class="control-label">Shipping Id</label>
 							</div>
 							<div class="col-md-6 col-xs-12">
-								<input type="text" path="shipId" class="form-control" required="true" readonly="true"/>
+								<input type="text" th:field="*{shipId}" class="form-control" required="true" readonly="true"/>
 								<div class="text-left">
 									<span th:errors="*{shipId}" class="text-danger" ></span>
 									
@@ -160,6 +172,7 @@
 							</div>
 						</div>
 					
+						
 						<div class="row form-group">
 							<div class="col-md-4 col-xs-12 ">
 								<label for="saleOrder.saleId" class="control-label">Sale Order Code</label>
@@ -167,7 +180,7 @@
 							<div class="col-md-6 col-xs-12">
 								<select th:field="*{saleOrder.saleId}" class="form-control" required="true"> 
 										<option value="">-Select -</option>
-										<options items="${saleOrder}" />
+										<option th:each="map:${saleOrder}" th:value="${map.key}" th:text="${map.value}" ></option>
 								</select>
 							<div class="text-left"><span th:errors="*{saleOrder.saleId}" class="text-danger" ></span>	</div>
 							</div>
@@ -190,7 +203,7 @@
 								<label for="couContdtls" class="control-label">Courier Contact Number</label>
 							</div>
 							<div class="col-md-6 col-xs-12">
-								<input type="text" th:field="couContdtls" class="form-control num" required="true" />
+								<input type="text" th:field="*{couContdtls}" class="form-control num" required="true" />
 								
 							<div class="text-left"><span th:field="*{couContdtls}" class="text-danger" ></errors> </div>
 							</div>
@@ -251,8 +264,8 @@
 
 </main>
 
-<span th:include="~{shared/Footer :: footer (~{::body},'home')}">
-</span>
+<th:block th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</th:block>
 
 
 <script>

@@ -1,7 +1,21 @@
-<span th:include="~{shared/Footer :: footer (~{::body},'home')}">
-</span>
+<span th:replace="~{shared/Menubar :: header}"></span>
 
-<main class="container mt-5">
+
+
+<main class="container mt-3">
+
+<div th:if="${msg}" class=" flex-row-reverse ">
+	    <div class="alert alert-success p-2" role="alert">
+	        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <strong  th:text="${msg}"></strong> 
+	    </div>
+ </div>
+<div th:if="${emsg}" class=" flex-row-reverse">
+	    <div class="alert alert-danger p-2" role="alert">
+	        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <strong  th:text="${emsg}" ></strong> 
+	    </div>
+</div>
 
 
 <div class="card border-primary box">
@@ -10,7 +24,7 @@
 		<h2 class="text-center">
 			<span >Welcome to GRN View Page</span>
 			<span class="float-right">
-				<a class="text-dark"  href="pdf?id=${goodRecieveNote.grnId}"><i class="fa fa-print"></i></a>
+				<a class="text-dark"  th:href="@{pdfExport(grnId=${goodRecieveNote.grnId})}"><i class="fa fa-print"></i></a>
 			</span>		
 		</h2>
 	</div>
@@ -75,7 +89,7 @@
       <div class="modal-footer container" style="display:block">
       	<div class="row">
       		<div class="col-6">
-		        <a class="btn btn-danger btn-block" th:href="@{delete/{id}(id=${goodRecieveNote.grnId})">Yes</a>
+		        <a class="btn btn-danger btn-block" th:href="@{/grn/delete(grnId=${goodRecieveNote.grnId})}">Yes</a>
       		</div>
       		<div class="col-6">
 		        <button type="button" class="btn btn-success btn-block" data-dismiss="modal" >No</button>
@@ -145,6 +159,7 @@
 							</div>
 						</div>
 						
+						
 						<div class="row form-group">
 							<div class="col-md-4 col-xs-12 ">
 								<label for="purchase.purId" class="control-label">Place Order Code</label>
@@ -152,7 +167,7 @@
 							<div class="col-md-6 col-xs-12">
 								<select th:field="*{purchase.purId}" class="form-control" required="true">
 									<option value="">-Select-</option>
-									<options items="${purchase}" />
+									<option th:each="map:${purchase}" th:value="${map.key}" th:text="${map.value}" ></option>
 								</select>
 							<div class="text-left"><span th:errors="*{purchase.purId}" class="text-danger" ></span></div>
 							</div>
@@ -194,8 +209,8 @@
 
 </main>
 
-<span th:include="~{shared/Footer :: footer (~{::body},'home')}">
-</span>
+<th:block th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</th:block>
 
 
 <script>

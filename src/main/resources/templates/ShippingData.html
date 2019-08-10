@@ -1,8 +1,7 @@
 <span th:replace="~{shared/Menubar :: header}"></span>
 
 
-<main class="container mt-5">
-
+<main class="container mt-3">
 
 
 <style>
@@ -24,7 +23,7 @@
 	</div>
 	<div class="card-body">
 				
-			<h3 th:if="${shipping != null}">Data Not Found!</h3>
+			<h3 th:if="${shipping == null}">Data Not Found!</h3>
 		
 	<div class="table-responsive">
 	
@@ -36,27 +35,28 @@
 						<th>NOTE</th>
 						<th colspan="9" align="center">OPERATIONS</th>
 					</tr>
+
 						<tr th:each="ship:${shipping}">
 							<td th:text="${ship.shipId}"></td>
 							<td th:text="${ship.shipCode}"></td>
 							<td th:text="${ship.saleOrder.orderCode}"></td>
 							<td th:text="${ship.shipDesc}"></td>
 
-							<td><a th:href="@{viewItems/{shipId}(shipId=${ship.shipId})}" class="text-dark"><b><i class="fa fa-cart-plus fa-3x"></i></b></a></td>
-							<td><a th:href="@{view/{shipId}(${ship.shipId})}" class="btn btn-success">View&nbsp;<i class="fa fa-eye"></i></a></td>
-							<td><a class="btn btn-primary" th:href="@{excelExport/{shipId}(shipId=${ship.shipId})}">Excel &nbsp;<i class="fa fa-file-excel-o"></i></a></td>
-							<td><a class="btn btn-info" th:href="@{pdfExport/{shipId}(shipId=${ship.shipId})}">Pdf &nbsp;<i class="fa fa-file-pdf-o"></i></a></td>
+							<td><a th:href="@{viewItems(shipId=${ship.shipId})}" class="text-dark"><b><i class="fa fa-cart-plus fa-3x"></i></b></a></td>
+							<td><a th:href="@{view(shipId=${ship.shipId})}" class="btn btn-success">View&nbsp;<i class="fa fa-eye"></i></a></td>
+							<td><a class="btn btn-primary" th:href="@{excelExport(shipId=${ship.shipId})}">Excel &nbsp;<i class="fa fa-file-excel-o"></i></a></td>
+							<td><a class="btn btn-info" th:href="@{pdfExport(shipId=${ship.shipId})}">Pdf &nbsp;<i class="fa fa-file-pdf-o"></i></a></td>
 
 						</tr>
 
 				<tr class="thead-dark ">
 					<th><button class="btn btn-info">Reports </button></th>
 					<th colspan=5>
-						<a href="excelExport" >
+						<a th:href="@{excelExport}" >
 						<img th:src="@{/images/icons/BulkExcel.png}" class="img img-responsive img-rounded" width="70" height="50" title="Export Data to Excel"/ ></a>
 					</th>
 					<th colspan=5>
-						<a href="pdfExport" ><img th:src="@{/images/icons/BulkPdf.png}" width="70" height="50" title="Export Data to pdf"/ >  </a>
+						<a th:href="@{pdfExport}" ><img th:src="@{/images/icons/BulkPdf.png}" width="70" height="50" title="Export Data to pdf"/ >  </a>
 					</th>
 					
 				</tr>
@@ -76,8 +76,8 @@
 
 </main>
 
-<span th:include="~{shared/Footer :: footer (~{::body},'home')}">
-</span>
+<th:block th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</th:block>
 
 
 <script>

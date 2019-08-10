@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.app.model.SaleOrder;
 import com.app.model.SalesDetails;
 import com.app.repo.SaleOrderRepository;
-import com.app.repo.SaleOrderRepository.ViewE;
 import com.app.repo.SalesDetailsRepository;
 import com.app.service.ISaleOrderService;
 
@@ -73,10 +72,11 @@ public class SaleOrderServiceImpl implements ISaleOrderService {
 	@Transactional(readOnly=true)
 	public Map<Integer, String> getInvoicedSaleOrders(String status) {
 		
-		List<ViewE> list = repo.findInvoiceSaleOrderByStatus(status);
+		List<Object[]> list = repo.findInvoiceSaleOrderByStatus(status);
 		
-		return list.stream().collect(Collectors.toMap(ViewE::getSaleId, ViewE::getOrderCode));
+		return list.stream().collect(Collectors.toMap((ob)->(Integer)ob[0],(ob)->(String)ob[1]));
 	}
+	
 
 	@Transactional(readOnly=true)
 	public SalesDetails getSalesDetailsById(Integer salesDtlsId) {
@@ -85,11 +85,13 @@ public class SaleOrderServiceImpl implements ISaleOrderService {
 		return list.isPresent()?list.get():null;
 	}
 
+	
 	@Transactional
 	public void updateSalesDetails(SalesDetails salesDetails) {
 		srepo.save(salesDetails).getSalesDtlsId();
 	}
 
+	
 	@Transactional
 	public Integer updateAllSalesDetailsStatus(String shipSatus, Integer soHoId) {
 		return srepo.updateSalesDetailsBasedOnStatus(shipSatus, soHoId);

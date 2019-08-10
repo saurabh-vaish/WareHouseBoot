@@ -31,9 +31,7 @@ public class ShippingValidator implements Validator {
 			errors.rejectValue("shipCode", null, "please enter code !");
 		} else if (!Pattern.matches("[A-Za-z0-9]{2,10}", shipping.getShipCode())) {
 			errors.rejectValue("shipCode", null, "no special charecters allowed , max limit is 10 charecters !!");
-		} else if (shippingService.isShippingCodeExist(shipping.getShipCode())) {
-			errors.rejectValue("shipCode", null, "code is already exist !");
-		}
+		} 
 
 		//text check
 		if (!StringUtils.hasText(shipping.getShipRefNum().trim())) {

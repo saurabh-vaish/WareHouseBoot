@@ -13,7 +13,6 @@ import com.app.model.Purchase;
 import com.app.model.PurchaseDtl;
 import com.app.repo.PurchaseDtlRepository;
 import com.app.repo.PurchaseRepository;
-import com.app.repo.PurchaseRepository.ViewD;
 import com.app.service.IPurchaseService;
 
 @Service
@@ -68,9 +67,13 @@ public class PurchaseServiceImpl implements IPurchaseService {
 	@Transactional(readOnly=true)
 	public Map<Integer, String> getInvoicedPurchaseOrders(String status) {
 	
-		List<ViewD> list = repo.findInvoicePurchseOrderByStatus(status);
+		List<Object[]> list = repo.findInvoicePurchseOrderByStatus(status);
 		
-		return list.stream().collect(Collectors.toMap(ViewD::getPurId, ViewD::getOrderCode));
+		return list.stream().collect(Collectors.toMap(
+								(ob)->(Integer)ob[0],
+								(ob)->(String)ob[1]
+								)
+							);
 	}
 	
 

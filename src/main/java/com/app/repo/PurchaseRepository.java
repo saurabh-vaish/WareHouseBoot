@@ -12,12 +12,8 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Integer>{
 	public List<Purchase> findByOrderCode(String orderCode);
 	
 	@Query("select p.purId,p.orderCode from com.app.model.Purchase as p where p.status= :status")
-	public List<ViewD> findInvoicePurchseOrderByStatus(String status);
+	public List<Object[]> findInvoicePurchseOrderByStatus(String status);
 	
 	
-	interface ViewD
-	{
-		Integer getPurId();
-		String getOrderCode();
-	}
+	
 }

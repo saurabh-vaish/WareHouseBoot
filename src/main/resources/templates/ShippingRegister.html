@@ -1,7 +1,19 @@
 <span th:replace="~{shared/Menubar :: header}"></span>
 
-<main class="container mt-5">
+<main class="container mt-3">
 
+<div th:if="${msg}" class=" flex-row-reverse ">
+	    <div class="alert alert-success p-2" role="alert">
+	        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <strong  th:text="${msg}"></strong> 
+	    </div>
+ </div>
+<div th:if="${emsg}" class=" flex-row-reverse">
+	    <div class="alert alert-danger p-2" role="alert">
+	        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <strong  th:text="${emsg}" ></strong> 
+	    </div>
+</div>
 
 <div class="card border-primary box">
 
@@ -17,7 +29,7 @@
 								<label for="shipCode" class="control-label">Shipping Code</label>
 							</div>
 							<div class="col-md-6 col-xs-12">
-								<input type="text" th:field="*{shipCode}" class="form-control"  placeholder="Enter Shipping Code"/>
+								<input type="text" th:field="*{shipCode}" class="form-control"  placeholder="Enter Shipping Code" required/>
 								<div class="text-left">
 									<span th:errors="*{shipCode}" class="text-danger" ></span>
 									<span id="msg" class="text-danger text-left"></span>
@@ -43,7 +55,7 @@
 							<div class="col-md-6 col-xs-12">
 								<select th:field="*{saleOrder.saleId}" class="form-control" required="true"> 
 										<option value="">-Select -</option>
-										<options items="${saleOrder}" />
+										<option th:each="map:${saleOrder}" th:value="${map.key}" th:text="${map.value}" ></option>
 								</select>
 							<div class="text-left"><span th:errors="*{saleOrder.saleId}" class="text-danger" ></span>	</div>
 							</div>
@@ -66,7 +78,7 @@
 								<label for="couContdtls" class="control-label">Courier Contact Number</label>
 							</div>
 							<div class="col-md-6 col-xs-12">
-								<input type="text" th:field="couContdtls" class="form-control num" required="true" />
+								<input type="text" th:field="*{couContdtls}" class="form-control num" required="true" />
 								
 							<div class="text-left"><span th:field="*{couContdtls}" class="text-danger" ></errors> </div>
 							</div>
@@ -114,12 +126,9 @@
 				</form>
 			
 	</div>
-	<c:if test="${msg ne null }">
-	<div class="card-footer text-danger bg-success">
-		${msg} 
-		<c:if test="${shipId ne null }">
-			<a href="view?id=${shipId}"  class="btn btn-primary float-right" >View &nbsp;<i class="fa fa-eye"></i></a>
-		</c:if>
+	<div th:if="${msg != null}" class="card-footer text-danger bg-success">
+		<span th:text="${msg}"></span> 
+			<a  th:if="${shipId != null}" href="view?id=${shipId}"  class="btn btn-primary float-right" >View &nbsp;<i class="fa fa-eye"></i></a>
 	</div>
 
 </div> <!-- card ended -->
@@ -128,8 +137,8 @@
 
 </main>
 
-<span th:include="~{shared/Footer :: footer (~{::body},'home')}">
-</span>
+<th:block th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</th:block>
 
 
 <script>

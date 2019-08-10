@@ -1,6 +1,8 @@
 <span th:replace="~{shared/Menubar :: header}"></span>
 
-<main class="container mt-5">
+<main class="container mt-3">
+
+
 
 <style>
 
@@ -26,8 +28,7 @@
 
 	<div class="table-responsive">
 	
-		<c:if test="${!empty goodRecieveNote }">
-		<table th:if="${}" class="table table-striped table-bordered table-hover text-center  ">
+		<table th:if="${goodRecieveNote != null}" class="table table-striped table-bordered table-hover text-center  ">
 				<tr class="thead-dark ">
 						<th>ID</th>
 						<th>CODE</th>
@@ -35,36 +36,32 @@
 						<th>PURCHASE ORDER CODE</th>
 						<th>NOTE</th>
 						<th colspan="9" align="center">OPERATIONS</th>
-					</tr>
-					
-					<%-- ${grn.purchase.details.orderDtlId} --%>
-					
+					</tr>				
 						<tr th:each="grn:${goodRecieveNote}">
 							<td th:text="${grn.grnId}"></td>
 							<td th:text="${grn.grnCode}"></td>
 							<td th:text="${grn.grnType}"></td>
 							<td th:text="${grn.purchase.orderCode}"></td>
 							<td th:text="${grn.grnDesc}"></td>
-							<td><a th:href="@{viewItems/{grnId}(grnId=${grn.grnId})}" class="text-dark"><b><i class="fa fa-cart-plus fa-3x"></i></b>
+							<td><a th:href="@{viewItems(grnId=${grn.grnId})}" class="text-dark"><b><i class="fa fa-cart-plus fa-3x"></i></b>
 							</a></td>
-							<td><a th:href="@{view/{grnId}(grnId=${grn.grnId})}" class="btn btn-success">View&nbsp;<i class="fa fa-eye"></i></a></td>
-							<td><a class="btn btn-primary" th:href="@{excelExport/{grnId}(grnId=${grn.grnId})}">Excel&nbsp;<i class="fa fa-file-excel-o"></i></a></td>
-							<td><a class="btn btn-info" th:href="@{pdfExport/{grnId}grnId=${grn.grnId})}">Pdf &nbsp;<i class="fa fa-file-pdf-o"></i></a></td>
+							<td><a th:href="@{view(grnId=${grn.grnId})}" class="btn btn-success">View&nbsp;<i class="fa fa-eye"></i></a></td>
+							<td><a class="btn btn-primary" th:href="@{excelExport(grnId=${grn.grnId})}">Excel&nbsp;<i class="fa fa-file-excel-o"></i></a></td>
+							<td><a class="btn btn-info" th:href="@{pdfExport(grnId=${grn.grnId})}">Pdf &nbsp;<i class="fa fa-file-pdf-o"></i></a></td>
 						</tr>
 					<tr class="thead-dark ">
 					<th><button class="btn btn-info">Reports </button></th>
 					<th colspan=6>
-						<a href="excelExport" >
+						<a th:href="@{excelExport}" >
 						<img th:src="@{/images/icons/BulkExcel.png}" class="img img-responsive img-rounded" width="70" height="50" title="Export Data to Excel"/ ></a>
 					</th>
 					<th colspan=6>
-						<a href="pdfExport" ><img th:src="@{/images/icons/BulkPdf.png}" width="70" height="50" title="Export Data to pdf"/ >  </a>
+						<a th:href="@{pdfExport}" ><img th:src="@{/images/icons/BulkPdf.png}" width="70" height="50" title="Export Data to pdf"/ >  </a>
 					</th>
 					
 				</tr>
 			</table>
 		
-			</c:if>
 		</div>
 	</div>
 	<div th:if="${msg != null}" class="card-footer " style="background: #50d8af !important">
@@ -79,8 +76,8 @@
 
 </main>
 
-<span th:include="~{shared/Footer :: footer (~{::body},'home')}">
-</span>
+<th:block th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</th:block>
 
 
 

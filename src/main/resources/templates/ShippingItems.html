@@ -1,6 +1,6 @@
 <span th:replace="~{shared/Menubar :: header}"></span>
 
-<main class="container mt-5">
+<main class="container mt-3">
 
 <div class="card border-primary box">
 
@@ -16,26 +16,26 @@
 			 <table class="table  table-bordered table-hover text-center  ">
 					<tr >
 						<th class="col-6">Shipping Code </th>
-						<td class="col-6" th:text="${shipCode}"></td>
+						<td class="col-6 text-primary" th:text="${shipCode}"></td>
 					</tr>
 			</table> 
 	
 			<div th:if="${nullCount != 0}" class="row">
 				 <div class="col-6">
-					<a th:href="@{updateOrderStatus/{shipId}(shipId=${shipId})/{saleOrder}(saleOrderId=${saleOrderId}/shipSatus=ACCEPTED}" class="btn btn-success btn-block">Accept All</a>
+					<a th:href="@{updateOrderStatus(shipId=${shipId},saleOrderId=${saleOrderId},shipSatus=ACCEPTED)}" class="btn btn-success btn-block">Accept All</a>
 				</div>
 				<div class="col-6">
-					<a th:href="@{updateOrderStatus/{shipId}(shipId=${shipId})/{saleOrderId}(saleOrderId=${saleOrderId})/shipSatus=REJECTED}" class="btn btn-danger btn-block">Reject All</a>
+					<a th:href="@{updateOrderStatus(shipId=${shipId},saleOrderId=${saleOrderId},shipSatus=REJECTED)}" class="btn btn-danger btn-block">Reject All</a>
 				</div>
 				</div>
 				<br /> <br />
 
-					<span th:if="${purchaseDtls.grnStatus==ACCEPTED}">
+<!-- 					<span th:if="${purchaseDtls.grnStatus==ACCEPTED}">
 							<font color="green"> Order Accepted </font>
 						</span>
 					<span th:if="${purchaseDtls.grnStatus==RETURNED}">
 							<font color="red"> Order Returned </font>
-					</span>
+					</span> -->
 				
 			<br><br>	
 		
@@ -56,18 +56,18 @@
 								<td  th:text="${sdtls.item.itemCode}" ></td>
 								<td  th:text="${sdtls.item.baseCost}" ></td>
 								<td  th:text="${sdtls.quantity}" ></td>
-								<td  th:text="${sdtls.quantity*sdtls.item.baseCost}" ></td>
+								<td  th:text="${sdtls.quantity}*${sdtls.item.baseCost}" ></td>
 								<td th:if="${sdtls.shipSatus == null}">
-										<a th:href="@{updateOrderStatus/{shipId}(shipId=${shipId})/{salesDtlsId}(salesDtlsId=${sdtls.salesDtlsId})/shipSatus=ACCEPTED}" class="btn btn-success">Accept</a>
-										<a th:href="@{updateOrderStatus/{shipId}(shipId=${shipId})/{salesDtlsId}(salesDtlsId=${sdtls.salesDtlsId})/shipSatus=REJECTED}" class="btn btn-danger">Return</a>
-									 <br /> <br /></td>
+										<a th:href="@{updateOrderStatus(shipId=${shipId},salesDtlsId=${sdtls.salesDtlsId},shipSatus=ACCEPTED)}" class="btn btn-success">Accept</a>
+										<a th:href="@{updateOrderStatus(shipId=${shipId},salesDtlsId=${sdtls.salesDtlsId},shipSatus=REJECTED)}" class="btn btn-danger">Return</a>
+								</td>
 									<td th:if="${sdtls.shipSatus=='ACCEPTED'}"><font color="green"> Accepted </font></td>
 									<td th:if="${sdtls.shipSatus=='REJECTED'}"><font color="red"> Rejected </font></td>
 							</tr>
 					</table>
 				</div>
  	
- 				<a th:if="${param.status eq 'ORDERED'}"  class="btn btn-success btnbox">GO</a>
+ 				<a th:if="${param.status == 'ORDERED'}"  class="btn btn-success btnbox">GO</a>
 				
 	</div>
 </div>
@@ -75,8 +75,8 @@
 </main>
 
 
-<span th:include="~{shared/Footer :: footer (~{::body},'home')}">
-</span>
+<th:block th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</th:block>
 
 
 <script>

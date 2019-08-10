@@ -14,13 +14,8 @@ public interface SaleOrderRepository extends JpaRepository<SaleOrder, Integer>{
 	
 	
 	@Query("select s.saleId,s.orderCode from com.app.model.SaleOrder as s where status= :status")
-	public List<ViewE> findInvoiceSaleOrderByStatus(String status);
+	public List<Object[]> findInvoiceSaleOrderByStatus(String status);
 	
 	
-	interface ViewE
-	{
-		Integer getSaleId();
-		String getOrderCode();
-	}
 	
 }
