@@ -1,6 +1,19 @@
 <span th:replace="~{shared/Menubar :: header}"></span>
 
-<main class="container mt-5">
+<main class="container mt-3">
+
+<div th:if="${msg}" class=" flex-row-reverse ">
+	    <div class="alert alert-success p-2" role="alert">
+	        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <strong  th:text="${msg}"></strong> 
+	    </div>
+ </div>
+<div th:if="${emsg}" class=" flex-row-reverse">
+	    <div class="alert alert-danger p-2" role="alert">
+	        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <strong  th:text="${emsg}" ></strong> 
+	    </div>
+</div>
 
 
 
@@ -10,7 +23,7 @@
 		<h2 class="text-center">
 			<span >Welcome to User View Page</span>
 			<span class="float-right">
-				<a class="text-dark"  th:href="@{pdf/{id}(id=${user.userId})}"><i class="fa fa-print"></i></a>
+				<a class="text-dark"  th:href="@{pdf(id=${user.userId})}"><i class="fa fa-print"></i></a>
 			</span>		
 		</h2>
 	</div>
@@ -24,24 +37,24 @@
 					</tr>
 					<tr>
 						<th class="col-6">User Name</th>
-						<td class="col-6" th:text="${user.userName}"</td>
+						<td class="col-6" th:text="${user.userName}"></td>
 					</tr>
 					<tr>
 						<th class="col-6">User Gender</th>
-						<td class="col-6" th:text="${user.gender}"</td>
+						<td class="col-6" th:text="${user.gender}"></td>
 					</tr>
 					<tr>
 						<th class="col-6">User Email</th>
-						<td class="col-6" th:text="${user.userEmail}"</td>
+						<td class="col-6" th:text="${user.userEmail}"></td>
 					</tr>
 					<tr>
 					<tr>
 						<th class="col-6">User Mobile</th>
-						<td class="col-6" th:text="${user.userMobile}"</td>
+						<td class="col-6" th:text="${user.userMobile}"></td>
 					</tr>
 					<tr>
 						<th class="col-6">User Roles</th>
-						<td class="col-6" th:text="${user.roles}"</td>
+						<td class="col-6" th:text="${user.roles}"></td>
 					</tr>
 					
 					<tr>
@@ -53,7 +66,7 @@
 		
 		
 	</div>
-	<div th:if="${msg != null}" class="card-footer text-danger bg-default">
+	<div th:if="${msg != null}" class="card-footer text-white bg-success">
 			<span th:text="${msg}"></span>
 	</div>
 
@@ -183,7 +196,8 @@
 							</div>
 						</div>
 						
-						<div class="row form-group">
+					<input type="text" th:field="*{userPwd}" class="form-control num" required="true" placeholder="Enter Password" hidden/>
+						<!-- <div class="row form-group">
 							<div class="col-md-4 col-xs-12 ">
 								<label for="userPwd" class="control-label">Password</label>
 							</div>
@@ -195,7 +209,7 @@
 								<span th:errors="*{userPwd}" class="text-danger" ></span>
 							</div>
 							</div>
-						</div>
+						</div> -->
 
 						<div class="row form-group">
 							<div class="col-md-4 col-xs-12">
@@ -242,8 +256,8 @@
 
 </main>
 
-<span th:include="~{shared/Footer :: footer (~{::body},'home')}">
-</span>
+<th:block th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</th:block>
 
 <script>
 

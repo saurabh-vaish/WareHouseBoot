@@ -1,7 +1,21 @@
  <span th:replace="LoginMenu :: loginHeader"></span>
  
 
-<main class="container mt-5">
+<main class="container mt-3">
+
+<div th:if="${msg}" class=" flex-row-reverse ">
+	    <div class="alert alert-success p-2" role="alert">
+	        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <strong  th:text="${msg}"></strong> 
+	    </div>
+ </div>
+<div th:if="${emsg}" class=" flex-row-reverse">
+	    <div class="alert alert-danger p-2" role="alert">
+	        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <strong  th:text="${emsg}" ></strong> 
+	    </div>
+</div>
+
 
 <div class="row d-flex justify-content-center">
 
@@ -218,7 +232,7 @@
 						by default it is enabled in spring security , so we need this to include it our form 
 						it is fix input .
 			 -->
-				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+			<!-- 	<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /> -->
 			
 			<div class="inputGroup inputGroup3 col-md-12">
 				<button type="submit" id="login" class="btn btn-success btn-block align-left btnbox"> Login &nbsp;<i class="fa fa-login"></i>
@@ -300,7 +314,7 @@
 						by default it is enabled in spring security , so we need this to include it our form 
 						it is fix input .
 					   -->
-							<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+							<!-- <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /> -->
 					</div>
 					<br><br>
 					<div class="col-md-1 col-xs-12 text-left">
@@ -328,7 +342,7 @@
 
 </main>
 
-<span th:replace="/shared/Footer :: footer(template,menu)"></span>
+<th:block th:include="/shared/Footer :: footer(template,menu)"></th:block>
 
 
  <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js}"></script>

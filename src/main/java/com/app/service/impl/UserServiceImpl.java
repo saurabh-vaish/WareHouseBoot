@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,15 +15,15 @@ import com.app.service.IUserService;
 @Service
 public class UserServiceImpl implements IUserService {
 
-	//@Autowired
-	//private BCryptPasswordEncoder ncoder;
+	@Autowired
+	private BCryptPasswordEncoder ncoder;
 	
 	@Autowired
 	private UserRepository repo;
 
 	@Transactional
 	public Integer saveUser(User user) {
-		//user.setUserPwd(ncoder.encode(user.getUserPwd()));
+		user.setUserPwd(ncoder.encode(user.getUserPwd()));
 		return repo.save(user).getUserId();
 	}
 

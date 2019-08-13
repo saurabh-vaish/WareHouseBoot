@@ -15,18 +15,19 @@
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800" rel="stylesheet">
 
-  <!-- Bootstrap CSS File -->
+ <!-- Bootstrap CSS File -->
 	<link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet">
 
   <!-- Libraries CSS Files -->
   <link th:href="@{/webjars/font-awesome/5.7.2/css/all.css}" rel="stylesheet">
   <link th:href="@{/webjars/animate/3.5.2/animate.min.css}" rel="stylesheet">
+  <link th:href="@{/webjars/datatables.net-bs4/3.2.2/css/dataTables.bootstrap4.css}" rel="stylesheet">
   <link th:href="@{/lib/venobox/venobox.css}" rel="stylesheet">
   <link th:href="@{/webjars/owl.carousel/2.3.4/dist/assets/owl.carousel.min.css}" rel="stylesheet">
 
-  <!-- Login Stylesheet File -->
+  <!-- Main Stylesheet File -->
   <link th:href="@{/css/style.css}" rel="stylesheet">
- 
+
    <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css}">
   <link th:href="@{/css/formLogin.css}" rel="stylesheet">
   
@@ -49,8 +50,8 @@
          	<img th:src="@{/images/icons/logo.png}" alt="" title="warehouse" class="navbar-brand active img shadow-lg ml-4 " style="max-width:45px;" />
          </a>
         <ul class="nav-menu ml-auto">
-        <li ><a href="${url}/login">Login</a></li>
-          <li ><a href="${url}/userr/register">Register</a></li>
+        <li ><a th:href="@{/login}">Login</a></li>
+          <li ><a th:href="@{/userr/register}">Register</a></li>
       
         </ul>
       </nav><!-- #nav-menu-container -->

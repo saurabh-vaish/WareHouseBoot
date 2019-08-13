@@ -24,7 +24,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name="usertab")
-public class User {
+public class User 
+{
 
 	@Id
 	@GeneratedValue(generator="user")

@@ -7,11 +7,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -19,7 +22,10 @@ import com.app.model.User;
 import com.app.service.IUserService;
 import com.app.util.EmailUtil;
 
+import lombok.extern.log4j.Log4j2;
+
 @Controller
+@Log4j2
 public class LoginController {
 
 	@Autowired
@@ -35,7 +41,15 @@ public class LoginController {
 	private String uemail=null;
 	
 	
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
+
+	@GetMapping("/home")
+	public String showHome()
+	{
+		return "shared/Menubar";
+	}
+	
+	
+	@GetMapping(value = "/login")
 	public String loginPage(@RequestParam(value = "error", required = false) String error,
 							@RequestParam(value = "logout", required = false) String logout,Model model)
 	{
@@ -46,55 +60,53 @@ public class LoginController {
 		if(logout != null) {
 			errorMessge = "You have been successfully logged out !!";
 		}
+		
 		model.addAttribute("errorMessge", errorMessge);
 		return "UserLogin";
 	}
+	
+	
 
-	@RequestMapping(value="/logout", method = RequestMethod.GET)
+	@GetMapping(value="/logout")
 	public String logoutPage (HttpServletRequest request, HttpServletResponse response)
 	{
-		/*
+		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (auth != null){   
 			new SecurityContextLogoutHandler().logout(request, response, auth);
 		}
-		 */
+		
 		return "redirect:/login?logout=true";
 	}
 	
-	@RequestMapping("/denied")
+	@GetMapping("/denied")
 	public String deniedPage() {
+		
 		return "AccessDenied";
 	}
 	
 	
 	
 	// * ajax  method for checking duplicate emails
-	@RequestMapping("/check")
+	@GetMapping("/check")
 	public @ResponseBody String checkEmail(@RequestParam("email")String email) //@ResponseBody for ajax call
 	{
 		String msg="";
 
-		//List<User> user = service.getAllUsers(); 
 		User user = service.findByUserEmail(email); 
-		/*
-		 * for(User u : user) { if(u.getUserEmail().equals(email)) {
-		 * System.out.println("yes"); msg="Email already exits ."; break; } }
-		 */
 		
 		if(user==null)
 		{
 			msg="User not found , Enter correct email.";
 		}
-		System.out.println("msg"+msg);
+		
+		log.info("msg");
 		return msg;
 	}
 	
 	
 	
-	
-	
-	@RequestMapping("/forget")
+	@GetMapping("/forget")
 	public String forgetPassword(@RequestParam String useremail,ModelMap map) {
 		
 		otp = UUID.randomUUID().toString().substring(1, 6).toUpperCase();  // 5 charecters
@@ -108,11 +120,14 @@ public class LoginController {
 			uemail=useremail;
 			map.addAttribute("msg", "Check Email For OTP");
 			
+			log.info("emil sent for otp");
+			
 			regTime = LocalDateTime.now().plusMinutes(2);  // at the time of registering for otp 
 		}
 		else
 		{
-			System.out.println("Email sending failed!! Check your internet connection");
+			log.info("Email sending failed!! ");
+			
 			map.addAttribute("error", "Email sending failed!! Check your internet connection");	
 			
 			return "userLogin";
@@ -124,20 +139,17 @@ public class LoginController {
 	
 		// OTP varification
 	
-		@RequestMapping(value="/otp",method=RequestMethod.POST)
+		@PostMapping(value="/otp")
 		public String varifyAndSaveUser(@RequestParam String id,ModelMap map)
 		{
 			LocalDateTime ld = LocalDateTime.now();
 			boolean b = ld.isBefore(regTime);
 			
-			System.out.println(regTime);
-			System.out.println("ld "+ld);
-			
 			if(!b)   // if user takes time more than 2 minues then expired
 			{
-				System.out.println("expired");
 				map.addAttribute("msg", " OTP Expired");
 				map.addAttribute("msgOtp", "true");
+			
 				
 				return "userLogin";
 			}
@@ -146,8 +158,7 @@ public class LoginController {
 				if(id.equals(otp))
 				{
 					
-					System.out.println("otp "+otp);
-					
+				
 					String tempPass=UUID.randomUUID().toString().substring(0, 6).toUpperCase(); 
 					
 					String text = "Your temprary password for login . "
@@ -159,21 +170,24 @@ public class LoginController {
 					
 					if(!flag)
 					{
-						map.addAttribute("msg", "Email sending failed!! Check your internet connection");						
+						map.addAttribute("msg", "Email sending failed!! Check your internet connection");	
+						
+						log.info("email failed for temporary password");
 					}
 					else {
 					
-					User user = service.findByUserEmail(uemail); // finding user by email
-					user.setUserPwd(tempPass);  // sending temporary password
-					service.updatePass(user);   // update user with that password
-					
-					map.addAttribute("msg","A temprary password has been send to your email ");
+						User user = service.findByUserEmail(uemail); // finding user by email
+						user.setUserPwd(tempPass);  // sending temporary password
+						service.updatePass(user);   // update user with that password
+						
+						map.addAttribute("msg","A temprary password has been send to your email ");
+						
+						log.info("Temparary password send to email");
 					}
 					
 				}
 				else
 				{
-					System.out.println("invalid");
 					map.addAttribute("msg","Invalid OTP");				
 				}
 				

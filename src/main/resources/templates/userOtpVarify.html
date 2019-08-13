@@ -1,6 +1,19 @@
-<span th:replace="~{shared/Menubar :: header}"></span>
+ <span th:replace="LoginMenu :: loginHeader"></span>
 
-<main class="container mt-5">
+<main class="container mt-3">
+
+<div th:if="${msg}" class=" flex-row-reverse ">
+	    <div class="alert alert-success p-2" role="alert">
+	        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <strong  th:text="${msg}"></strong> 
+	    </div>
+ </div>
+<div th:if="${emsg}" class=" flex-row-reverse">
+	    <div class="alert alert-danger p-2" role="alert">
+	        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <strong  th:text="${emsg}" ></strong> 
+	    </div>
+</div>
 
 
 <div class="card border-primary box">
@@ -20,7 +33,7 @@
 						<input type="text" id="id" name="id" class="form-control" placeholder = "Enter OTP"> <br>
 			
 						
-							<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+							<!-- <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /> -->
 							
 						<input type="submit" value="Send" class="btn btn-success btn-rounded btnbox" > 
 				    </div>
@@ -48,8 +61,8 @@
 </main>
 
 
-<span th:include="~{shared/Footer :: footer (~{::body},'home')}">
-</span>
+<th:block th:include="~{shared/Footer :: footer (~{::body},'home')}">
+</th:block>
 
 
 <script>
@@ -64,7 +77,9 @@
 
 </script>
 
+<th:block th:with="activeUrl=${#strings.replace(#request.requestURL,'/save','')}">
 
+<span id="url" th:data="${activeUrl + '/register?msg=OTP Expired !! Register Again'}"></span><br>
 
 <script type="text/javascript">
 
@@ -91,8 +106,10 @@
 	function doSomething() {
 		elem.innerHTML = 'OTP Expired Redirecting... ';
 		
-		window.location.href = "http://localhost:2250/WareHousePro/userr/register?msg=OTP Expired !! Register Again";    // custom link paste when when u chaged
+		//window.location.href = "http://localhost:2250/WareHousePro/userr/register?msg=OTP Expired !! Register Again";    // custom link paste when when u chaged
+		window.location.href = document.getElementById("url").getAttribute("data");
 	}
 
 </script>
 
+</th:block>
